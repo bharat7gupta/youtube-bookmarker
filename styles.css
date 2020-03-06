@@ -1,0 +1,20 @@
+.bookmark-button {
+	display: inline-block;
+    vertical-align: top;
+    padding: 7px;
+    white-space: nowrap;
+	cursor: pointer;
+}
+
+.bookmark {
+	position: absolute;
+	width: 2px;
+	height: 100%;
+	background: #7fffd4;
+	z-index: 34;
+	pointer-events: none;
+}
+
+.hide-bookmark {
+	display: none;
+}
