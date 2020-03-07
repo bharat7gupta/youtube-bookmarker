@@ -129,7 +129,7 @@
 		if (!bookmarkButton) {
 			const bookmarkButton = document.createElement('img');
 
-			bookmarkButton.src = chrome.extension.getURL('icons/add-bookmark-star-512.png');
+			bookmarkButton.src = chrome.extension.getURL('icons/bookmark.png');
 			bookmarkButton.className = 'ytp-button ' + bookmarkButtonClassName;
 			bookmarkButton.title = 'Click to bookmark this moment (Ctrl + B)';
 

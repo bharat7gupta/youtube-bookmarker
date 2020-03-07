@@ -2,7 +2,7 @@
     "name": "YouTube Bookmarker",
     "version": "1.0",
 	"description": "YouTube Bookmarker - Lalala",
-	"permissions": ["storage", "tabs", "<all_urls>"],
+	"permissions": ["storage", "tabs", "https://*.youtube.com/*"],
 	"background": {
 		"scripts": ["background.js"],
 		"persistent": false
@@ -15,7 +15,7 @@
 		}
 	],
 	"web_accessible_resources": [
-		"icons/add-bookmark-star-512.png",
+		"icons/bookmark.png",
 		"icons/edit.png",
 		"icons/play.png",
 		"icons/copy-link.png",
@@ -24,9 +24,9 @@
 	],
 	"browser_action": {
 		"default_icon": {
-		  "16": "icons/add-bookmark-star-512.png",
-		  "24": "icons/add-bookmark-star-512.png",
-		  "32": "icons/add-bookmark-star-512.png"
+		  "16": "icons/youtube-bookmarker-32.png",
+		  "24": "icons/youtube-bookmarker-32.png",
+		  "32": "icons/youtube-bookmarker-32.png"
 		},
 		"default_title": "YouTube Bookmarker",
 		"default_popup": "popup.html"
