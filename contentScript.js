@@ -3,6 +3,8 @@
 	let currentVideoId = null;
 	let lastHandledVideoId = null;
 	let videoBookmarks = [];
+	let adCheckInterval = null;
+	let wasPlayingAd = false;
 
 	/* configs */
 	const bookmarkButtonClassName = 'bookmark-button';
@@ -58,22 +60,9 @@
 
 	/* On new video load */
 	function onNewVideoLoad(isRefresh) {
-		let wasPlayingAd = false;
 
 		// check if an ad is playing. If yes, hide bookamarks and recalculate bookmark positions
-		setInterval(function() {
-			if(isPlayingAd()) {
-				hideAllBookmarks(true);
-				wasPlayingAd = true;
-			}
-			else {
-				if(wasPlayingAd) {
-					removePrevBookmarks();
-					showVideoBookmarks(getVideoDuration());
-					wasPlayingAd = false;
-				}
-			}
-		}, 1000);
+		adCheckInterval = setInterval(adChecker, 1000);
 
 		removePrevBookmarks();
 		videoBookmarks = [];
@@ -101,6 +90,16 @@
 
 				addBookmarkButton();
 			});
+
+		ytPlayer.addEventListener('playing', function() {
+			if(adCheckInterval === null) {
+				adCheckInterval = setInterval(adChecker, 1000);
+			}
+		});
+
+		// clear ad checker interval script when video is paused or has ended
+		ytPlayer.addEventListener('ended', clearAdCheckerInterval);
+		ytPlayer.addEventListener('pause', clearAdCheckerInterval);
 
 		lastHandledVideoId = currentVideoId;
 	}
@@ -179,6 +178,20 @@
 		}
 	}
 
+	function adChecker() {
+		if(isPlayingAd()) {
+			hideAllBookmarks(true);
+			wasPlayingAd = true;
+		}
+		else {
+			if(wasPlayingAd) {
+				removePrevBookmarks();
+				showVideoBookmarks(getVideoDuration());
+				wasPlayingAd = false;
+			}
+		}
+	}
+
 	/* Show all bookmarks */
 	function showVideoBookmarks(videoDuration) {
 		ytProgressBar && videoBookmarks.forEach(function(bookmark) {
@@ -214,9 +227,16 @@
 		return null;
 	}
 
+	/* Check if ad is playing */
 	function isPlayingAd() {
 		const adOverlay = document.getElementsByClassName('ytp-ad-player-overlay')[0];
 		return !!adOverlay;
+	}
+
+	/* clear ad checker interval script */
+	function clearAdCheckerInterval() {
+		clearInterval(adCheckInterval);
+		adCheckInterval = null;
 	}
 
 	/*********  Utility functions *********/
