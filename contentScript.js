@@ -12,16 +12,14 @@
 	const bookmarkDescPrefix = 'Bookmark at ';
 
 	/* DOM elements */
-	const ytLeftControl = document.getElementsByClassName('ytp-left-controls')[0];
-	const ytPlayer = document.getElementsByClassName("html5-main-video")[0];
-	const ytProgressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
+	let ytLeftControl, ytPlayer, ytProgressBar;
 
 	/* respond to messages from background or popup pages */
 	chrome.runtime.onMessage.addListener(function(data) {
 		switch(data.type) {
 			case 'NEW_VIDEO':
 				currentVideoId = data.videoId;
-				if (lastHandledVideoId !== currentVideoId) {
+				if (currentVideoId && lastHandledVideoId !== currentVideoId) {
 					onNewVideoLoad(false);
 				}
 
@@ -54,11 +52,17 @@
 
 	/* on refresh */
 	currentVideoId = getQueryParam('v');
-	onNewVideoLoad(true);
 
+	if (currentVideoId) {
+		onNewVideoLoad(true);
+	}
 
 	/* On new video load */
 	function onNewVideoLoad(isRefresh) {
+
+		ytLeftControl = document.getElementsByClassName('ytp-left-controls')[0];
+		ytPlayer = document.getElementsByClassName("html5-main-video")[0];
+		ytProgressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
 
 		// check if an ad is playing. If yes, hide bookamarks and recalculate bookmark positions
 		adCheckInterval = setInterval(adChecker, 1000);
