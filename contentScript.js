@@ -160,7 +160,7 @@
 				videoBookmarks = data;
 				videoBookmarks.push(newBookmark);
 				videoBookmarks = videoBookmarks.sort(function(a, b) { return a.time - b.time });
-				chrome.storage.sync.set({[currentVideoId]: JSON.stringify(videoBookmarks)})
+				chrome.storage.sync.set({[currentVideoId]: JSON.stringify(videoBookmarks)});
 			});
 		}
 	}
