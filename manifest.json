@@ -1,7 +1,7 @@
 {
   "name": "YouTube Bookmarker",
   "version": "1.0",
-	"description": "Bookmark important points in a YouTube video and easier access to bookmarks from the extension menu. Give a description to each bookmark for easier navigation. Start video playback from the given bookmark. Copy link with timestamp of a bookmark so that the link shared starts video playback from the bookmark. If you got unnecessary or too many bookmarks, you can delete them too.",
+	"description": "Bookmark important points in a YouTube video. Edit Bookmark title. Share bookmark link. Start play from bookmark etc",
 	"permissions": ["storage", "tabs", "https://*.youtube.com/*"],
 	"background": {
 		"scripts": ["background.js"],

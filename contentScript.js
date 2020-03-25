@@ -12,7 +12,9 @@
 	const bookmarkDescPrefix = 'Bookmark at ';
 
 	/* DOM elements */
-	let ytLeftControl, ytPlayer, ytProgressBar;
+	const ytLeftControl = document.getElementsByClassName('ytp-left-controls')[0];
+	const ytPlayer = document.getElementsByClassName("html5-main-video")[0];
+	const ytProgressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
 
 	/* respond to messages from background or popup pages */
 	chrome.runtime.onMessage.addListener(function(data) {
@@ -57,10 +59,6 @@
 
 	/* On new video load */
 	function onNewVideoLoad(isRefresh) {
-
-		ytLeftControl = document.getElementsByClassName('ytp-left-controls')[0];
-		ytPlayer = document.getElementsByClassName("html5-main-video")[0];
-		ytProgressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
 
 		// check if an ad is playing. If yes, hide bookamarks and recalculate bookmark positions
 		adCheckInterval = setInterval(adChecker, 1000);
@@ -149,13 +147,17 @@
 
 		if (currentTime) {
 			const newBookmark = { time: currentTime, desc: bookmarkDescPrefix + getFormattedTime(currentTime) };
-			videoBookmarks.push(newBookmark);
-			videoBookmarks = videoBookmarks.sort(function(a, b) { return a.time - b.time });
 
 			addBookmark(newBookmark);
 
 			chrome.runtime.sendMessage({ type: 'BOOKMARK_ADDED', time: currentTime });
-			chrome.storage.sync.set({[currentVideoId]: JSON.stringify(videoBookmarks)});
+
+			fetchBookmarks().then(data => {
+				videoBookmarks = data;
+				videoBookmarks.push(newBookmark);
+				videoBookmarks = videoBookmarks.sort(function(a, b) { return a.time - b.time });
+				chrome.storage.sync.set({[currentVideoId]: JSON.stringify(videoBookmarks)})
+			});
 		}
 	}
 
