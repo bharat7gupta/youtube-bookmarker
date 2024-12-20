@@ -1,6 +1,6 @@
 {
   "name": "YouTube Bookmarker",
-  "version": "1.0",
+  "version": "1.2",
 	"description": "Bookmark important points in a YouTube video. Edit Bookmark title. Share bookmark link. Start play from bookmark etc",
 	"permissions": ["storage", "tabs"],
 	"host_permissions": ["https://*.youtube.com/*"],
