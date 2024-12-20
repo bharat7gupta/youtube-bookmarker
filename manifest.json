@@ -2,10 +2,10 @@
   "name": "YouTube Bookmarker",
   "version": "1.0",
 	"description": "Bookmark important points in a YouTube video. Edit Bookmark title. Share bookmark link. Start play from bookmark etc",
-	"permissions": ["storage", "tabs", "https://*.youtube.com/*"],
+	"permissions": ["storage", "tabs"],
+	"host_permissions": ["https://*.youtube.com/*"],
 	"background": {
-		"scripts": ["background.js"],
-		"persistent": false
+		"service_worker": "background.js"
 	},
 	"content_scripts": [
 		{
@@ -15,14 +15,19 @@
 		}
 	],
 	"web_accessible_resources": [
-		"icons/bookmark.png",
-		"icons/edit.png",
-		"icons/play.png",
-		"icons/copy-link.png",
-		"icons/delete.png",
-		"icons/save.png"
+		{
+			"resources": [
+				"icons/bookmark.png",
+				"icons/edit.png",
+				"icons/play.png",
+				"icons/copy-link.png",
+				"icons/delete.png",
+				"icons/save.png"
+			],
+			"matches": ["https://*.youtube.com/*"]
+		}
 	],
-	"browser_action": {
+	"action": {
 		"default_icon": {
 		  "16": "icons/youtube-bookmarker-32.png",
 		  "24": "icons/youtube-bookmarker-32.png",
@@ -31,5 +36,5 @@
 		"default_title": "YouTube Bookmarker",
 		"default_popup": "popup.html"
 	},
-  "manifest_version": 2
+  "manifest_version": 3
 }
