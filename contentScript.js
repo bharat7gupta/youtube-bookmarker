@@ -16,6 +16,8 @@
 
 	/* respond to messages from background or popup pages */
 	chrome.runtime.onMessage.addListener(function(data) {
+		const loopFn = () => loopBetweenBookmarks(data);
+
 		switch(data.type) {
 			case 'NEW_VIDEO':
 				currentVideoId = data.videoId;
@@ -44,6 +46,12 @@
 					showVideoBookmarks(getVideoDuration());
 				}
 
+				break;
+			case 'START_LOOP_BETWEEN_BOOKMARKS':
+				ytPlayer && ytPlayer.addEventListener('timeupdate', loopFn);
+				break;
+			case 'STOP_LOOP_BETWEEN_BOOKMARKS':
+				ytPlayer && ytPlayer.removeEventListener('timeupdate', loopFn);
 				break;
 			default:
 				break;
@@ -232,6 +240,14 @@
 		}
 
 		return null;
+	}
+
+	function loopBetweenBookmarks(data) {
+		const [startTime, endTime] = [data.startTime, data.endTime].map(Number);
+
+		if(ytPlayer.currentTime >= startTime && parseInt(ytPlayer.currentTime, 10) === endTime) {
+			ytPlayer.currentTime = startTime;
+		}
 	}
 
 	/* Check if ad is playing */

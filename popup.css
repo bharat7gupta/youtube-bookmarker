@@ -8,7 +8,7 @@
 	min-height: 12px;
 }
 
-.hide-bookmarks {
+.hide-bookmarks, .loop-bookmarks {
 	white-space: nowrap;
 	text-align: right;
 }
@@ -58,8 +58,7 @@
 
 .bookmark-time {
 	width: 50px;
-	margin-right: 12px;
-	text-align: right;
+	margin: 0 12px;
 }
 
 .bookmark-desc {
@@ -80,4 +79,12 @@
 	width: 18px;
 	height: 18px;
 	cursor: pointer;
+}
+
+.loop-between-bookmarks-checkbox {
+	margin-top: -2px;
+}
+
+#hide-bookmarks-checkbox, #loop-bookmarks-checkbox {
+	vertical-align: sub;
 }

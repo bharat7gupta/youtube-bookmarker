@@ -2,6 +2,7 @@
 let currentVideoId;
 let currentBookmarks = [];
 const noBookmarksHTML = '<i class="row">No bookmarks</i>';
+const APP_PREFIX = 'ytbmr';
 
 function onSearchTextChange(e) {
 	const searchTerm = e.target.value.toLowerCase();
@@ -18,6 +19,36 @@ function onHideBookmarkCheckBoxClick(e) {
 		chrome.tabs.sendMessage(activeTab.id, { type: 'HIDE_BOOKMARKS', value: e.target.checked });
 
 		chrome.storage.sync.set({ 'hideBookmarks': e.target.checked });
+	});
+}
+
+function onLoopItemCheckBoxClick(e) {
+	const loopCheckboxes = document.getElementsByClassName('loop-between-bookmarks-checkbox');
+	const enableLoopCheckbox = document.getElementById('loop-bookmarks-checkbox');
+	const selectedLoopCheckboxes = [...loopCheckboxes].filter(lc => lc.checked);
+
+	if (selectedLoopCheckboxes.length === 2) {
+		enableLoopCheckbox.disabled = false;
+		[...loopCheckboxes].forEach(lc => lc.disabled = !lc.checked);
+	} else {
+		enableLoopCheckbox.checked = false;
+		enableLoopCheckbox.disabled = true;
+		[...loopCheckboxes].forEach(lc => lc.disabled = false);
+	}
+}
+
+function onLoopBookmarkCheckBoxClick(e) {
+	const loopCheckboxes = document.getElementsByClassName('loop-between-bookmarks-checkbox');
+	const messageType = e.target.checked ? 'START_LOOP_BETWEEN_BOOKMARKS' : 'STOP_LOOP_BETWEEN_BOOKMARKS';
+
+	chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+		const activeTab = tabs[0];
+		const [startTime, endTime] = [...loopCheckboxes].filter(lc => lc.checked).map(lc => lc.parentNode.getAttribute('data-time')).sort();
+
+		const loopData = { startTime, endTime, isLooping: e.target.checked };
+		window.localStorage.setItem(`${APP_PREFIX}-loop-data`, JSON.stringify(loopData));
+
+		chrome.tabs.sendMessage(activeTab.id, { type: messageType, startTime, endTime });
 	});
 }
 
@@ -40,6 +71,18 @@ function addBookmarkDetailRow(bookmarksElement, bookmark) {
 	bookmarkElement.id = 'bookmark-'+bookmark.time;
 	bookmarkElement.className = 'bookmark';
 	bookmarkElement.setAttribute('data-time', bookmark.time);
+
+	// bookmark loop data
+	const loopData = window.localStorage.getItem(`${APP_PREFIX}-loop-data`);
+	const { startTime, endTime } = JSON.parse(loopData) ?? {};
+
+	// loop between bookmarks checkbox
+	const loopPoints = document.createElement('input');
+	loopPoints.type = 'checkbox';
+	loopPoints.className = 'loop-between-bookmarks-checkbox';
+	loopPoints.addEventListener('change', onLoopItemCheckBoxClick);
+	loopPoints.checked = bookmark.time === Number(startTime) || bookmark.time === Number(endTime);
+	loopPoints.disabled = !loopPoints.checked;
 
 	// time element
 	const timeElement = document.createElement('div');
@@ -79,7 +122,8 @@ function addBookmarkDetailRow(bookmarksElement, bookmark) {
 	bookmarkControls.appendChild(playFromBookmark);
 	bookmarkControls.appendChild(copyBookmarkLink);
 	bookmarkControls.appendChild(deleteBookmark);
-
+	
+	bookmarkElement.appendChild(loopPoints);
 	bookmarkElement.appendChild(timeElement);
 	bookmarkElement.appendChild(bookmarkDesc);
 	bookmarkElement.appendChild(bookmarkControls);
@@ -170,10 +214,18 @@ function onDeleteBookmarkClick(e) {
 document.addEventListener("DOMContentLoaded", function() {
 	const searchBox = document.getElementById("search-box");
 	const hideBookmarkCheckBox = document.getElementById("hide-bookmarks-checkbox");
+	const loopBookmarkCheckBox = document.getElementById("loop-bookmarks-checkbox");
+
+	// bookmark loop data
+	const loopData = window.localStorage.getItem(`${APP_PREFIX}-loop-data`);
+	const { isLooping } = JSON.parse(loopData) ?? {};
+	loopBookmarkCheckBox.checked = isLooping;
+	loopBookmarkCheckBox.disabled = !isLooping;
 
 	// add event listeners
 	searchBox && searchBox.addEventListener("keyup", onSearchTextChange);
 	hideBookmarkCheckBox && hideBookmarkCheckBox.addEventListener('change', onHideBookmarkCheckBoxClick);
+	loopBookmarkCheckBox && loopBookmarkCheckBox.addEventListener('change', onLoopBookmarkCheckBoxClick);
 
 	chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
 		const activeTab = tabs[0];
