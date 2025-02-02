@@ -8,7 +8,7 @@
 
 	/* configs */
 	const bookmarkButtonClassName = 'bookmark-button';
-	const bookmarkClassName = 'bookmark';
+	const bookmarkClassName = 'ct-bookmark';
 	const bookmarkDescPrefix = 'Bookmark at ';
 
 	/* DOM elements */
@@ -124,8 +124,8 @@
 			const bookmark = document.createElement('div');
 
 			bookmark.id = bookmarkClassName + '-' + newBookmark.time;
-			bookmark.className = bookmarkClassName + (data['hideBookmarks'] ? ' hide-bookmark' : '');
-			bookmark.style.top = 0;
+			bookmark.className = bookmarkClassName + (data['hideBookmarks'] ? ' ct-hide-bookmark' : '');
+			bookmark.style.top = '0';
 			bookmark.style.left = ((newBookmark.time / videoDuration) * 100) + '%';
 
 			ytProgressBar.appendChild(bookmark);
@@ -210,15 +210,15 @@
 	/* Show all bookmarks */
 	function showVideoBookmarks(videoDuration) {
 		ytProgressBar && videoBookmarks.forEach(function(bookmark) {
-			addBookmark(bookmark, videoDuration);
+			addBookmark(bookmark);
 		});
 	}
 
 	function hideAllBookmarks(hide) {
-		const bookmarks = document.getElementsByClassName('bookmark');
+		const bookmarks = document.getElementsByClassName('ct-bookmark');
 
 		for(let i=0; i<bookmarks.length; i++) {
-			hide ? bookmarks[i].classList.add('hide-bookmark') : bookmarks[i].classList.remove('hide-bookmark');
+			hide ? bookmarks[i].classList.add('ct-hide-bookmark') : bookmarks[i].classList.remove('ct-hide-bookmark');
 		}
 	}
 

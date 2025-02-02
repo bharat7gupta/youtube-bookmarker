@@ -1,4 +1,4 @@
-.bookmark {
+.ct-bookmark {
 	position: absolute;
 	width: 2px;
 	height: 100%;
@@ -7,6 +7,6 @@
 	pointer-events: none;
 }
 
-.hide-bookmark {
+.ct-hide-bookmark {
 	display: none;
 }
