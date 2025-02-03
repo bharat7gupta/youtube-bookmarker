@@ -5,6 +5,7 @@
 	let videoBookmarks = [];
 	let adCheckInterval = null;
 	let wasPlayingAd = false;
+	let loopData = {};
 
 	/* configs */
 	const bookmarkButtonClassName = 'bookmark-button';
@@ -16,8 +17,6 @@
 
 	/* respond to messages from background or popup pages */
 	chrome.runtime.onMessage.addListener(function(data) {
-		const loopFn = () => loopBetweenBookmarks(data);
-
 		switch(data.type) {
 			case 'NEW_VIDEO':
 				currentVideoId = data.videoId;
@@ -48,10 +47,12 @@
 
 				break;
 			case 'START_LOOP_BETWEEN_BOOKMARKS':
-				ytPlayer && ytPlayer.addEventListener('timeupdate', loopFn);
+				loopData = data;
+				ytPlayer && ytPlayer.addEventListener('timeupdate', loopBetweenBookmarks);
 				break;
 			case 'STOP_LOOP_BETWEEN_BOOKMARKS':
-				ytPlayer && ytPlayer.removeEventListener('timeupdate', loopFn);
+				loopData = {};
+				ytPlayer && ytPlayer.removeEventListener('timeupdate', loopBetweenBookmarks);
 				break;
 			default:
 				break;
@@ -242,8 +243,8 @@
 		return null;
 	}
 
-	function loopBetweenBookmarks(data) {
-		const [startTime, endTime] = [data.startTime, data.endTime].map(Number);
+	function loopBetweenBookmarks() {
+		const [startTime, endTime] = [loopData.startTime, loopData.endTime].map(Number);
 
 		if(ytPlayer.currentTime >= startTime && parseInt(ytPlayer.currentTime, 10) === endTime) {
 			ytPlayer.currentTime = startTime;

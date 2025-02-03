@@ -7,7 +7,7 @@ import DeleteBookmark from "./DeleteBookmark";
 import { getFormattedTime } from "./common";
 import { Bookmark } from "../types/bookmark";
 
-interface BookmarkProps {
+interface BookmarkViewProps {
     videoId: string;
     bookmark: Bookmark;
     selectionDisabled: boolean;
@@ -17,7 +17,7 @@ interface BookmarkProps {
     onSelect: (bookmark: Bookmark, selected: boolean) => void;
 }
 
-export default function BookmarkView({ videoId, bookmark, selectionDisabled, selected, onBookmarkDescUpdate, onDeleteBookamrk, onSelect }: BookmarkProps) {
+export default function BookmarkView({ videoId, bookmark, selectionDisabled, selected, onBookmarkDescUpdate, onDeleteBookamrk, onSelect }: BookmarkViewProps) {
     const [isEditingDesc, setIsEditingDesc] = useState<boolean>(false);
     const [bookmarkDescText, setBookmarkDescText] = useState<string>(bookmark.desc);
 

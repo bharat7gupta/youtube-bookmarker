@@ -27,13 +27,9 @@ export default function CurrentBookmarks() {
         chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
             const [startTime, endTime] = selectedBookmarks.sort((a, b) => a.time - b.time).map(b => b.time);
             const loopDataKey = `${APP_PREFIX}-loop-data-${currentVideoId}`;
-            
-            if (isLooping) {
-                const loopData = { startTime, endTime };
-                window.localStorage.setItem(loopDataKey, JSON.stringify(loopData));
-            } else {
-                window.localStorage.removeItem(loopDataKey);
-            }
+            const loopData = { startTime, endTime, isLooping };
+
+            currentVideoId && window.localStorage.setItem(loopDataKey, JSON.stringify(loopData));
 
             chrome.tabs.sendMessage(activeTab.id, { type: messageType, startTime, endTime });
         });
@@ -65,7 +61,7 @@ export default function CurrentBookmarks() {
                 setCurrentVideoId(videoId);
 
                 const loopDataKey = `${APP_PREFIX}-loop-data-${videoId}`;
-                const { startTime, endTime } = JSON.parse(window.localStorage.getItem(loopDataKey)) ?? {};
+                const { startTime, endTime, isLooping } = JSON.parse(window.localStorage.getItem(loopDataKey)) ?? {};
 
                 if (startTime && endTime) {
                     const loopBookmarks = [
@@ -74,7 +70,7 @@ export default function CurrentBookmarks() {
                     ];
 
                     setSelectedBookmarks(loopBookmarks);
-                    setIsLooping(true);
+                    setIsLooping(isLooping);
                 }
             }
         });
@@ -130,7 +126,7 @@ export default function CurrentBookmarks() {
         <>
             <div class="current-bookmarks">
                 <div class="row heading">
-                    Bookmarks in current video:
+                    Bookmarks in current video
                 </div>
 
                 <div class="row search-box">
@@ -143,12 +139,13 @@ export default function CurrentBookmarks() {
                     />
                 </div>
 
-                <div class="bookmarks" id="bookmarks">
+                <div class="bookmarks">
                     {(!filteredBookmarks || filteredBookmarks.length === 0) ? (
                         <i class="row">No bookmarks</i>
                     ): (
                         filteredBookmarks.map(bookmark => (
                             <BookmarkView
+                                key={bookmark.time}
                                 videoId={currentVideoId}
                                 bookmark={bookmark}
                                 onBookmarkDescUpdate={onBookmarkDescUpdate}
@@ -165,18 +162,23 @@ export default function CurrentBookmarks() {
                 </div>
             </div>
 
-            <br/><hr />
-            <div class="row loop-bookmarks">
-                <span>
-                    Loop between selected bookmarks
-                    <input
-                        type="checkbox"
-                        disabled={selectedBookmarks.length < 2}
-                        checked={isLooping}
-                        onInput={() => setIsLooping(isLooping => !isLooping)}
-                    />
-                </span>
-            </div>
+            {bookmarks.length >= 2 ? (
+                <>
+                    <br/><hr />
+                    <div class="row loop-bookmarks">
+                        <span>
+                            Loop between selected bookmarks
+                            <input
+                                type="checkbox"
+                                className="inline-checkbox"
+                                disabled={selectedBookmarks.length < 2}
+                                checked={isLooping}
+                                onInput={() => setIsLooping(isLooping => !isLooping)}
+                            />
+                        </span>
+                    </div>
+                </>
+            ) : null}
         </>
     )
 }

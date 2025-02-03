@@ -6,7 +6,7 @@ import AllBookmarks from './AllBookmarks';
 import '../styles.css';
 
 export function App() {
-    const [toggle, setToggle] = useState(false);
+    const [showAllBookmarksToggle, setShowAllBookmarksToggle] = useState(false);
     const [hideBookmarksToggle, setHideBookmarksToggle] = useState(false);
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export function App() {
     }, []);
 
     const handleToggle = () => {
-        setToggle(toggle => !toggle);
+        setShowAllBookmarksToggle(toggle => !toggle);
     };
 
     const onHideBookmarkCheckBoxClick = (e) => {
@@ -31,17 +31,19 @@ export function App() {
         <div class="app-container">
             <div class="row top-row">
                 <div className="show-all-bookmarks">
-                    <a href="javascript:void(0)" onClick={handleToggle}>Show all saved bookmarks</a>
+                    <a href="javascript:void(0)" onClick={handleToggle}>
+                        {showAllBookmarksToggle ? 'Back' : 'Show all saved bookmarks'}
+                    </a>
                 </div>
                 <div className="hide-bookmarks">
                     <span>
                         Hide bookmarks&nbsp;
-                        <input type="checkbox" checked={hideBookmarksToggle} onInput={onHideBookmarkCheckBoxClick} />
+                        <input type="checkbox" className="inline-checkbox" checked={hideBookmarksToggle} onInput={onHideBookmarkCheckBoxClick} />
                     </span>
                 </div>
             </div>
 
-            {toggle ? <AllBookmarks /> : <CurrentBookmarks />}
+            {showAllBookmarksToggle ? <AllBookmarks /> : <CurrentBookmarks />}
         </div>
     );
 }

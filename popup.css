@@ -79,7 +79,12 @@
 	width: 110px;
 }
 
-.bookmark-controls img {
+.bookmark-min-controls {
+	width: 56px;
+}
+
+.bookmark-controls img,
+.bookmark-min-controls img {
 	margin: 0 4px;
 	width: 18px;
 	height: 18px;
@@ -90,6 +95,35 @@
 	margin-top: -2px;
 }
 
-#hide-bookmarks-checkbox, #loop-bookmarks-checkbox {
+.inline-checkbox {
 	vertical-align: sub;
+}
+
+.video-bookmarks-card {
+	display: flex;
+	border: 1px solid #e5e5e5;
+	margin: 8px;
+	border-radius: 4px;
+}
+
+.video-thumbnail {
+	width: 80px;
+	height: 60px;
+	padding: 4px;
+}
+
+.bookmarks-min-view {
+	margin: 4px;
+	flex: 1;
+}
+
+.bookmark-min-view {
+	display: flex;
+	padding: 4px 0;
+}
+
+hr {
+	height: 1px;
+    background: #d5d5d5;
+    border: 0;
 }
