@@ -7,7 +7,7 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			input: [
-				'popup.html'
+				'src/popup.html'
 			]
 		}
 	},
@@ -24,7 +24,7 @@ export default defineConfig({
 					dest: './icons'
 				},
 				{
-					src: 'background.js',
+					src: 'src/background.js',
 					dest: '.'
 				},
 				{

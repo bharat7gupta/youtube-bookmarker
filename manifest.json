@@ -34,7 +34,7 @@
 		  "32": "icons/youtube-bookmarker-32.png"
 		},
 		"default_title": "YouTube Bookmarker",
-		"default_popup": "popup.html"
+		"default_popup": "src/popup.html"
 	},
   "manifest_version": 3
 }
