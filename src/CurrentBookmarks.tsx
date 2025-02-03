@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks"
-import { Bookmark } from "../types/bookmark";
+import { Bookmark } from "./types/bookmark";
 import BookmarkView from "./BookmarkView";
 
 const APP_PREFIX = 'ytbmr';

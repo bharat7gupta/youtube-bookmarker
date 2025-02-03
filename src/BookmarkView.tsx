@@ -5,7 +5,7 @@ import CopyBookmarkLink from "./CopyBookmarkLink";
 import DeleteBookmark from "./DeleteBookmark";
 
 import { getFormattedTime } from "./common";
-import { Bookmark } from "../types/bookmark";
+import { Bookmark } from "./types/bookmark";
 
 interface BookmarkViewProps {
     videoId: string;

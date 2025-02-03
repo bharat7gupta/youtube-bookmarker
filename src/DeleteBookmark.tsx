@@ -1,4 +1,4 @@
-import { Bookmark } from "../types/bookmark";
+import { Bookmark } from "./types/bookmark";
 
 interface DeleteBookmarkProps {
     bookmark: Bookmark;

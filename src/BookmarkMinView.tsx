@@ -1,4 +1,4 @@
-import { Bookmark } from "../types/bookmark";
+import { Bookmark } from "./types/bookmark";
 import { getFormattedTime } from "./common";
 import CopyBookmarkLink from "./CopyBookmarkLink";
 

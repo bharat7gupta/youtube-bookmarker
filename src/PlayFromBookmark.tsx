@@ -1,4 +1,4 @@
-import { Bookmark } from "../types/bookmark";
+import { Bookmark } from "./types/bookmark";
 
 interface PlayFromBookmarkProps {
     bookmark: Bookmark;
