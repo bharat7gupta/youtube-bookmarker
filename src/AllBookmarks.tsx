@@ -13,8 +13,9 @@ export default function AllBookmarks() {
     }, []);
 
     const fetchAllBookmarks = () => {
-        chrome.storage.sync.get().then(function(bookmarksByVideoId) {
+        chrome.storage.sync.get().then(function (bookmarksByVideoId) {
             delete bookmarksByVideoId.hideBookmarks;
+            delete bookmarksByVideoId.lastModifiedByVideoId;
 
             const allBookmarksParsed = Object.keys(bookmarksByVideoId).reduce((obj: Record<string, Bookmark[]>, key: string) => {
                 obj[key] = JSON.parse(bookmarksByVideoId[key]);
@@ -22,27 +23,44 @@ export default function AllBookmarks() {
             }, {});
 
             setBookmarksByVideoId(allBookmarksParsed);
-        });	
+        });
     };
 
     function fetchLastModifiedData() {
-        chrome.storage.sync.get('lastModifiedByVideoId', function(data) {
+        chrome.storage.sync.get('lastModifiedByVideoId', function (data) {
             setLastModifiedByVideoId(data.lastModifiedByVideoId ? JSON.parse(data.lastModifiedByVideoId) : {});
         });
-	}
+    }
 
     const handleSearchTextChange = (e) => {
         setSearchText(e.target.value);
     };
 
+    let filteredVideoIds;
+    if (!searchText || searchText.trim().length === 0) {
+        filteredVideoIds = Object.keys(bookmarksByVideoId);
+    } else {
+        const searchTerm = searchText.toLowerCase();
+        filteredVideoIds = Object.keys(bookmarksByVideoId).reduce((videoIds, videoId) => {
+            const bookmarks = bookmarksByVideoId[videoId] ?? [];
+            console.log('bookmarks', bookmarks);
+
+            if (bookmarks.some(b => b.desc.toLowerCase().indexOf(searchTerm) > -1)) {
+                videoIds.push(videoId);
+            }
+
+            return videoIds;
+        }, [])
+    }
+
     return (
-        <div class="current-bookmarks">
+        <div class="all-bookmarks">
             <div class="row heading">
                 All Bookmarks
             </div>
 
             <div class="row search-box">
-                <input 
+                <input
                     type="text"
                     class="textbox"
                     placeholder="Search for bookmark..."
@@ -51,18 +69,23 @@ export default function AllBookmarks() {
                 />
             </div>
 
-            {Object.keys(bookmarksByVideoId)
-                .sort((id1, id2) => lastModifiedByVideoId[id2] - lastModifiedByVideoId[id1])
-                .map(videoId => (
-                    bookmarksByVideoId[videoId]?.length > 0 ? (
-                        <VideoBookmarksCard
-                            key={videoId}
-                            videoId={videoId}
-                            bookmarks={bookmarksByVideoId[videoId]}
-                        />
-                    ) : null
+            {(!filteredVideoIds || filteredVideoIds.length === 0) ? (
+                <i class="row">No bookmarks</i>
+            ) : (
+                filteredVideoIds
+                    .sort((id1, id2) => lastModifiedByVideoId[id2] - lastModifiedByVideoId[id1])
+                    .map(videoId => (
+                        bookmarksByVideoId[videoId]?.length > 0 ? (
+                            <VideoBookmarksCard
+                                key={videoId}
+                                videoId={videoId}
+                                bookmarks={bookmarksByVideoId[videoId]}
+                            />
+                        ) : null
+                    )
+                    )
                 )
-            )}
+            }
         </div>
     );
 }
