@@ -16,7 +16,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 	const bookmarkDescPrefix = 'Bookmark at ';
 
 	/* DOM elements */
-	let ytLeftControl, ytPlayer, ytProgressBar;
+	let ytRightControls, ytPlayer, ytProgressBar;
 
 	/* respond to messages from background or popup pages */
 	chrome.runtime.onMessage.addListener(function(data) {
@@ -72,7 +72,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 	/* On new video load */
 	function onNewVideoLoad(isRefresh) {
 
-		ytLeftControl = document.getElementsByClassName('ytp-left-controls')[0];
+		ytRightControls = document.getElementsByClassName('ytp-right-controls')[0];
 		ytPlayer = document.getElementsByClassName("html5-main-video")[0];
 		ytProgressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
 
@@ -147,7 +147,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 			bookmarkButton.className = 'ytp-button ' + bookmarkButtonClassName;
 			bookmarkButton.title = 'Click to bookmark this moment (Ctrl + B)';
 
-			ytLeftControl.appendChild(bookmarkButton);
+			ytRightControls.prepend(bookmarkButton);
 
 			bookmarkButton.addEventListener('click', newBookmarkAddEventHandler);
 		}
