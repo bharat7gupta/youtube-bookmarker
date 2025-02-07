@@ -3,8 +3,6 @@ import { useEffect, useState } from 'preact/hooks';
 import CurrentBookmarks from './CurrentBookmarks';
 import AllBookmarks from './AllBookmarks';
 
-import '../styles.css';
-
 export function App() {
     const [showAllBookmarksToggle, setShowAllBookmarksToggle] = useState(false);
     const [hideBookmarksToggle, setHideBookmarksToggle] = useState(false);

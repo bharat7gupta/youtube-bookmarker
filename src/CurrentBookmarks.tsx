@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks"
-import { Bookmark } from "./types/bookmark";
+import { Bookmark, LoopData } from "./types/bookmark";
 import BookmarkView from "./BookmarkView";
 
 const APP_PREFIX = 'ytbmr';
@@ -27,7 +27,7 @@ export default function CurrentBookmarks() {
         chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
             const [startTime, endTime] = selectedBookmarks.sort((a, b) => a.time - b.time).map(b => b.time);
             const loopDataKey = `${APP_PREFIX}-loop-data-${currentVideoId}`;
-            const loopData = { startTime, endTime, isLooping };
+            const loopData: LoopData = { startTime, endTime, isLooping };
 
             currentVideoId && window.localStorage.setItem(loopDataKey, JSON.stringify(loopData));
 

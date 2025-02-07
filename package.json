@@ -2,9 +2,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview"
+		"build": "vite build --config vite.config.content.ts && vite build --config vite.config.popup.ts"
 	},
 	"dependencies": {
 		"@types/chrome": "^0.0.300",

@@ -1,18 +1,22 @@
 import { defineConfig } from 'vite';
-import preact from '@preact/preset-vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	build: {
 		rollupOptions: {
-			input: [
-				'src/popup.html'
+			input: {
+				'contentScript.js': 'src/contentScript.ts'
+			},
+			output: [
+				{
+					entryFileNames: 'contentScript.js',
+					format: 'iife'
+				}
 			]
-		}
+		},
 	},
 	plugins: [
-		preact(),
 		viteStaticCopy({
 			targets: [
 				{
@@ -21,25 +25,17 @@ export default defineConfig({
 				},
 				{
 					src: 'icons/**',
-					dest: './icons'
+					dest: './icons',
 				},
 				{
 					src: 'src/background.js',
 					dest: '.'
 				},
 				{
-					src: 'common.js',
-					dest: '.'
-				},
-				{
-					src: 'contentScript.js',
-					dest: '.'
-				},
-				{
-					src: 'styles.css',
+					src: 'src/styles.css',
 					dest: '.'
 				}
-			]
+			],
 		})
 	],
 });

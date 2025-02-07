@@ -11,7 +11,7 @@
 		{
 		  "matches": ["https://*.youtube.com/*"],
 		  "css": ["styles.css"],
-		  "js": ["contentScript.js", "common.js"]
+		  "js": ["contentScript.js"]
 		}
 	],
 	"web_accessible_resources": [
@@ -22,7 +22,8 @@
 				"icons/play.png",
 				"icons/copy-link.png",
 				"icons/delete.png",
-				"icons/save.png"
+				"icons/save.png",
+				"assets/*"
 			],
 			"matches": ["https://*.youtube.com/*"]
 		}

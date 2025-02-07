@@ -1,11 +1,14 @@
+import { getFormattedTime } from './common';
+import { Bookmark, LoopData } from './types/bookmark';
+
 (function() {
 
 	let currentVideoId = null;
 	let lastHandledVideoId = null;
-	let videoBookmarks = [];
+	let videoBookmarks: Bookmark[] = [];
 	let adCheckInterval = null;
 	let wasPlayingAd = false;
-	let loopData = {};
+	let loopData: LoopData = {} as LoopData;
 
 	/* configs */
 	const bookmarkButtonClassName = 'bookmark-button';
@@ -51,7 +54,7 @@
 				ytPlayer && ytPlayer.addEventListener('timeupdate', loopBetweenBookmarks);
 				break;
 			case 'STOP_LOOP_BETWEEN_BOOKMARKS':
-				loopData = {};
+				loopData = {} as LoopData;
 				ytPlayer && ytPlayer.removeEventListener('timeupdate', loopBetweenBookmarks);
 				break;
 			default:
@@ -95,7 +98,7 @@
 		});
 
 		Promise.all([fetchBookmarksPromise, videoDurationPromise])
-			.then(function(data) {
+			.then(function(data: any) {
 				videoBookmarks = data[0];
 
 				showVideoBookmarks(data[1]);
@@ -165,7 +168,7 @@
 
 			chrome.runtime.sendMessage({ type: 'BOOKMARK_ADDED', time: currentTime });
 
-			fetchBookmarks().then(data => {
+			fetchBookmarks().then((data: any) => {
 				videoBookmarks = data;
 				videoBookmarks.push(newBookmark);
 				videoBookmarks = videoBookmarks.sort(function(a, b) { return a.time - b.time });
