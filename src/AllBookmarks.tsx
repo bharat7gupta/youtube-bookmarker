@@ -4,9 +4,11 @@ import VideoBookmarksCard from "./VideoBookmarksCard";
 
 export default function AllBookmarks() {
     const [bookmarksByVideoId, setBookmarksByVideoId] = useState<Record<string, Bookmark[]>>({});
+    const [lastModifiedByVideoId, setLastModifiedByVideoId] = useState<Record<string, number>>({});
     const [searchText, setSearchText] = useState<string>('');
 
     useEffect(() => {
+        fetchLastModifiedData();
         fetchAllBookmarks();
     }, []);
 
@@ -22,6 +24,12 @@ export default function AllBookmarks() {
             setBookmarksByVideoId(allBookmarksParsed);
         });	
     };
+
+    function fetchLastModifiedData() {
+        chrome.storage.sync.get('lastModifiedByVideoId', function(data) {
+            setLastModifiedByVideoId(data.lastModifiedByVideoId ? JSON.parse(data.lastModifiedByVideoId) : {});
+        });
+	}
 
     const handleSearchTextChange = (e) => {
         setSearchText(e.target.value);
@@ -43,15 +51,18 @@ export default function AllBookmarks() {
                 />
             </div>
 
-            {Object.keys(bookmarksByVideoId).map(videoId => (
-                bookmarksByVideoId[videoId]?.length > 0 ? (
-                    <VideoBookmarksCard
-                        key={videoId}
-                        videoId={videoId}
-                        bookmarks={bookmarksByVideoId[videoId]}
-                    />
-                ) : null
-            ))}
+            {Object.keys(bookmarksByVideoId)
+                .sort((id1, id2) => lastModifiedByVideoId[id2] - lastModifiedByVideoId[id1])
+                .map(videoId => (
+                    bookmarksByVideoId[videoId]?.length > 0 ? (
+                        <VideoBookmarksCard
+                            key={videoId}
+                            videoId={videoId}
+                            bookmarks={bookmarksByVideoId[videoId]}
+                        />
+                    ) : null
+                )
+            )}
         </div>
     );
 }

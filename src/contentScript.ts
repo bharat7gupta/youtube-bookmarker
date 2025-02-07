@@ -9,6 +9,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 	let adCheckInterval = null;
 	let wasPlayingAd = false;
 	let loopData: LoopData = {} as LoopData;
+	let lastModifiedByVideoId: any;
 
 	/* configs */
 	const bookmarkButtonClassName = 'bookmark-button';
@@ -82,7 +83,9 @@ import { Bookmark, LoopData } from './types/bookmark';
 		removePrevBookmarks();
 		videoBookmarks = [];
 
-		const fetchBookmarksPromise = fetchBookmarks();
+		const bookmarksPromise = fetchBookmarks();
+		
+		const lastModifiedPromise = fetchLastModifiedData();
 
 		const videoDurationPromise = new Promise(function(resolve) {
 			function getPlayTime() {
@@ -97,11 +100,12 @@ import { Bookmark, LoopData } from './types/bookmark';
 			}
 		});
 
-		Promise.all([fetchBookmarksPromise, videoDurationPromise])
+		Promise.all([bookmarksPromise, lastModifiedPromise, videoDurationPromise])
 			.then(function(data: any) {
 				videoBookmarks = data[0];
+				lastModifiedByVideoId = data[1];
 
-				showVideoBookmarks(data[1]);
+				showVideoBookmarks(data[2]);
 
 				addBookmarkButton();
 			});
@@ -179,6 +183,11 @@ import { Bookmark, LoopData } from './types/bookmark';
 				videoBookmarks.push(newBookmark);
 				videoBookmarks = videoBookmarks.sort(function(a, b) { return a.time - b.time });
 				chrome.storage.sync.set({[currentVideoId]: JSON.stringify(videoBookmarks)});
+				lastModifiedByVideoId = {
+					...lastModifiedByVideoId,
+					[currentVideoId]: Date.now()
+				};
+				chrome.storage.sync.set({ 'lastModifiedByVideoId': JSON.stringify(lastModifiedByVideoId)});
 			});
 		}
 	}
@@ -189,6 +198,17 @@ import { Bookmark, LoopData } from './types/bookmark';
 			// get all bookmarks for current video and create bookmark elements
 			chrome.storage.sync.get([ currentVideoId ], function(data) {
 				resolve(data[currentVideoId] ? JSON.parse(data[currentVideoId]) : [])
+			});
+		});
+	}
+
+	/* Fetch metadata across all videos. This is added to store more info for 
+		each bookmarked video and also preserve backward compatibility */
+	function fetchLastModifiedData() {
+		return new Promise(function(resolve) {
+			// get last modified data for each video
+			chrome.storage.sync.get('lastModifiedByVideoId', function(data) {
+				resolve(data.lastModifiedByVideoId ? JSON.parse(data.lastModifiedByVideoId) : {});
 			});
 		});
 	}
