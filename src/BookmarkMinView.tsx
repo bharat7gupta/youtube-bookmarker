@@ -17,7 +17,7 @@ export default function BookmarkMinView({ videoId, bookmark }: BookmarkMinViewPr
         <div key={bookmark.time} class="bookmark-min-view">
             <div class="bookmark-time">{getFormattedTime(bookmark.time)}</div>
 
-            <div class="bookmark-desc">{bookmark.desc}</div>
+            <div class="bookmark-desc" title={bookmark.desc}>{bookmark.desc}</div>
 
             <div class="bookmark-min-controls">
                 <img src="../icons/play.png" title="Play" onClick={onPlayClick} />

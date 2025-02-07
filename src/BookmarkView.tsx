@@ -61,7 +61,7 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
                         onInput={handleBookmarkDescChange}
                         onKeyPress={handleKeyPress}
                     />
-                ): <span>{bookmark.desc}</span>}
+                ): <span title={bookmark.desc}>{bookmark.desc}</span>}
             </div>
 
             <div class="bookmark-controls">

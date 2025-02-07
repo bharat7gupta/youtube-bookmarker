@@ -75,6 +75,10 @@
 	padding-left: 2px;
 }
 
+.all-bookmarks .bookmark-desc {
+	width: 140px;
+}
+
 .bookmark-controls {
 	width: 110px;
 }
