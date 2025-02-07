@@ -168,7 +168,13 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 			chrome.runtime.sendMessage({ type: 'BOOKMARK_ADDED', time: currentTime });
 
-			fetchBookmarks().then((data: any) => {
+			fetchBookmarks().then((data: Bookmark[]) => {
+				const isDuplicate = data.some(d => d.time === newBookmark.time);
+
+				if (isDuplicate) {
+					return;
+				}
+
 				videoBookmarks = data;
 				videoBookmarks.push(newBookmark);
 				videoBookmarks = videoBookmarks.sort(function(a, b) { return a.time - b.time });
