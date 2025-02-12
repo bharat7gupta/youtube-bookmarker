@@ -14,8 +14,10 @@ export default function AllBookmarks() {
 
     const fetchAllBookmarks = () => {
         chrome.storage.sync.get().then(function (bookmarksByVideoId) {
+            /** Just an unfortunate way of removing keys not required here */
             delete bookmarksByVideoId.hideBookmarks;
             delete bookmarksByVideoId.lastModifiedByVideoId;
+            delete bookmarksByVideoId.loopData;
 
             const allBookmarksParsed = Object.keys(bookmarksByVideoId).reduce((obj: Record<string, Bookmark[]>, key: string) => {
                 obj[key] = JSON.parse(bookmarksByVideoId[key]);
@@ -43,7 +45,6 @@ export default function AllBookmarks() {
         const searchTerm = searchText.toLowerCase();
         filteredVideoIds = Object.keys(bookmarksByVideoId).reduce((videoIds, videoId) => {
             const bookmarks = bookmarksByVideoId[videoId] ?? [];
-            console.log('bookmarks', bookmarks);
 
             if (bookmarks.some(b => b.desc.toLowerCase().indexOf(searchTerm) > -1)) {
                 videoIds.push(videoId);

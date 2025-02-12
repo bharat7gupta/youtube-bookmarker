@@ -12,7 +12,7 @@ export default function CurrentBookmarks() {
     const [isLooping, setIsLooping] = useState<boolean>(false);
 
     useEffect(() => {
-        initCurrentVideoId();
+        initCurrentVideo();
     }, []);
 
     useEffect(() => {
@@ -26,10 +26,15 @@ export default function CurrentBookmarks() {
 
         chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
             const [startTime, endTime] = selectedBookmarks.sort((a, b) => a.time - b.time).map(b => b.time);
-            const loopDataKey = `${APP_PREFIX}-loop-data-${currentVideoId}`;
             const loopData: LoopData = { startTime, endTime, isLooping };
 
-            currentVideoId && window.localStorage.setItem(loopDataKey, JSON.stringify(loopData));
+            chrome.storage.sync.get(['loopData'], function(data) {
+                const existingLoopData = data['loopData'] ? JSON.parse(data['loopData']) : {};
+                currentVideoId && chrome.storage.sync.set({'loopData': JSON.stringify({
+                    ...existingLoopData,
+                    [currentVideoId]: loopData
+                })});
+            });
 
             chrome.tabs.sendMessage(activeTab.id, { type: messageType, startTime, endTime });
         });
@@ -50,7 +55,7 @@ export default function CurrentBookmarks() {
         });
 	}
 
-    const initCurrentVideoId = () => {
+    const initCurrentVideo = () => {
         chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
             const activeTab = tabs[0];
 
@@ -59,22 +64,30 @@ export default function CurrentBookmarks() {
                 const urlParams = new URLSearchParams(queryParams);
                 const videoId = urlParams.get('v');
                 setCurrentVideoId(videoId);
-
-                const loopDataKey = `${APP_PREFIX}-loop-data-${videoId}`;
-                const { startTime, endTime, isLooping } = JSON.parse(window.localStorage.getItem(loopDataKey)) ?? {};
-
-                if (startTime && endTime) {
-                    const loopBookmarks = [
-                        { time: startTime } as Bookmark,
-                        { time: endTime } as Bookmark
-                    ];
-
-                    setSelectedBookmarks(loopBookmarks);
-                    setIsLooping(isLooping);
-                }
+                initLoopSection(videoId);
             }
         });
     }
+
+    const initLoopSection = (videoId: string) => {
+        chrome.storage.sync.get(['loopData'], function(data) {
+            const existingLoopData = data['loopData'] ? JSON.parse(data['loopData']) : null;
+
+            if (!existingLoopData) return;
+
+            const { startTime, endTime, isLooping } = existingLoopData[videoId];
+
+            if (startTime && endTime) {
+                const loopBookmarks = [
+                    { time: startTime } as Bookmark,
+                    { time: endTime } as Bookmark
+                ];
+
+                setSelectedBookmarks(loopBookmarks);
+                setIsLooping(isLooping);
+            }
+        });
+    };
 
     const handleSearchTextChange = (e) => {
         setSearchText(e.target.value);

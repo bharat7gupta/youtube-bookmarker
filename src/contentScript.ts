@@ -3,6 +3,8 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 (function() {
 
+	const APP_PREFIX = 'ytbmr';
+
 	let currentVideoId = null;
 	let lastHandledVideoId = null;
 	let videoBookmarks: Bookmark[] = [];
@@ -14,7 +16,9 @@ import { Bookmark, LoopData } from './types/bookmark';
 	/* configs */
 	const bookmarkButtonClassName = 'bookmark-button';
 	const bookmarkClassName = 'ct-bookmark';
+	const loopSectionClassName = 'ct-bookmarks-loop';
 	const bookmarkDescPrefix = 'Bookmark at ';
+	const hideBookmarkClassName = 'ct-hide-bookmark';
 
 	/* DOM elements */
 	let ytRightControls, ytPlayer, ytProgressBar;
@@ -53,10 +57,12 @@ import { Bookmark, LoopData } from './types/bookmark';
 			case 'START_LOOP_BETWEEN_BOOKMARKS':
 				loopData = data;
 				ytPlayer && ytPlayer.addEventListener('timeupdate', loopBetweenBookmarks);
+				highlightLoopSection();
 				break;
 			case 'STOP_LOOP_BETWEEN_BOOKMARKS':
 				loopData = {} as LoopData;
 				ytPlayer && ytPlayer.removeEventListener('timeupdate', loopBetweenBookmarks);
+				removeLoopSectionHighlight();
 				break;
 			default:
 				break;
@@ -106,6 +112,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 				lastModifiedByVideoId = data[1];
 
 				showVideoBookmarks(data[2]);
+				initLoopSectionIfAny();
 
 				addBookmarkButton();
 			});
@@ -132,8 +139,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 			const bookmark = document.createElement('div');
 
 			bookmark.id = bookmarkClassName + '-' + newBookmark.time;
-			bookmark.className = bookmarkClassName + (data['hideBookmarks'] ? ' ct-hide-bookmark' : '');
-			bookmark.style.top = '0';
+			bookmark.className = bookmarkClassName + (data['hideBookmarks'] ? ` ${hideBookmarkClassName}` : '');
 			bookmark.style.left = ((newBookmark.time / videoDuration) * 100) + '%';
 
 			ytProgressBar.appendChild(bookmark);
@@ -245,11 +251,14 @@ import { Bookmark, LoopData } from './types/bookmark';
 	}
 
 	function hideAllBookmarks(hide) {
-		const bookmarks = document.getElementsByClassName('ct-bookmark');
+		const bookmarks = document.getElementsByClassName(bookmarkClassName);
+		const loopSections = document.getElementsByClassName(loopSectionClassName);
+		const addOrRemoveClass = (elem) => hide 
+			? elem.classList.add(hideBookmarkClassName) 
+			: elem.classList.remove(hideBookmarkClassName);
 
-		for(let i=0; i<bookmarks.length; i++) {
-			hide ? bookmarks[i].classList.add('ct-hide-bookmark') : bookmarks[i].classList.remove('ct-hide-bookmark');
-		}
+		Array.from(bookmarks).forEach(addOrRemoveClass);
+		Array.from(loopSections).forEach(addOrRemoveClass);
 	}
 
 	/********* YouTube player functions *********/
@@ -277,6 +286,39 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 		if(ytPlayer.currentTime >= startTime && parseInt(ytPlayer.currentTime, 10) === endTime) {
 			ytPlayer.currentTime = startTime;
+		}
+	}
+
+	function highlightLoopSection() {
+		// clear previous highlight
+		removeLoopSectionHighlight();
+
+		chrome.storage.sync.get('hideBookmarks', function(data) {
+			const videoDuration = getVideoDuration();
+			const loopSection = document.createElement('div');
+
+			loopSection.className = loopSectionClassName + (data['hideBookmarks'] ? ` ${hideBookmarkClassName}` : '');
+			loopSection.style.left = ((loopData.startTime / videoDuration) * 100) + '%';
+			loopSection.style.right = (100 - ((loopData.endTime / videoDuration) * 100)) + '%';
+
+			ytProgressBar.appendChild(loopSection);
+		});
+	}
+
+	function removeLoopSectionHighlight() {
+		const loopSections = Array.from(document.getElementsByClassName(loopSectionClassName));
+		loopSections.forEach((loopSection) => loopSection.parentNode.removeChild(loopSection));
+	}
+
+	function initLoopSectionIfAny() {
+		if (currentVideoId) {
+			chrome.storage.sync.get(['loopData'], function(data) {
+				if (!data['loopData']) return;
+
+				const savedLoopData = JSON.parse(data['loopData']) ?? {};
+				loopData = savedLoopData[currentVideoId];
+				loopData.isLooping && highlightLoopSection();
+			});
 		}
 	}
 
