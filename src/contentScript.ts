@@ -38,9 +38,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 				
 				break;
 			case 'PLAY_FROM_BOOKMARK':
-				if(ytPlayer) {
-					ytPlayer.currentTime = data.value;
-				}
+				playFrom(data.value);
 
 				break;
 
@@ -56,7 +54,8 @@ import { Bookmark, LoopData } from './types/bookmark';
 				break;
 			case 'START_LOOP_BETWEEN_BOOKMARKS':
 				loopData = data;
-				ytPlayer && ytPlayer.addEventListener('timeupdate', loopBetweenBookmarks);
+				initLoopEvent();
+				playFrom(data.startTime);
 				highlightLoopSection();
 				break;
 			case 'STOP_LOOP_BETWEEN_BOOKMARKS':
@@ -289,6 +288,16 @@ import { Bookmark, LoopData } from './types/bookmark';
 		}
 	}
 
+	function playFrom(time: number) {
+		if(ytPlayer) {
+			ytPlayer.currentTime = time;
+		}
+	}
+
+	function initLoopEvent () {
+		ytPlayer && ytPlayer.addEventListener('timeupdate', loopBetweenBookmarks);
+	}
+
 	function highlightLoopSection() {
 		// clear previous highlight
 		removeLoopSectionHighlight();
@@ -317,7 +326,13 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 				const savedLoopData = JSON.parse(data['loopData']) ?? {};
 				loopData = savedLoopData[currentVideoId];
-				loopData.isLooping && highlightLoopSection();
+				const { startTime, isLooping } = loopData;
+
+				if (isLooping) {
+					initLoopEvent();
+					playFrom(startTime);
+					highlightLoopSection();
+				}
 			});
 		}
 	}
