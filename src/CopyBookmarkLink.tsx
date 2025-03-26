@@ -1,3 +1,4 @@
+import LinkIcon from "./icons/LinkIcon";
 import { Bookmark } from "./types/bookmark";
 
 interface CopyBookmarkLinkProps {
@@ -13,11 +14,6 @@ export default function CopyBookmarkLink({ bookmark, videoId }: CopyBookmarkLink
     }
 
     return (
-        <img
-            src="../icons/copy-link.png"
-            className="action"
-            title="Copy bookmark link"
-            onClick={onCopyBookmarkLinkClick}
-        />
+        <LinkIcon title="Copy bookmark link" onClick={onCopyBookmarkLinkClick} className="action" />
     );
 }

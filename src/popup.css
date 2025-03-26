@@ -88,10 +88,8 @@
 }
 
 .bookmark-controls .action,
-.bookmark-min-controls img {
-	margin: 0 4px;
-	width: 18px;
-	height: 18px;
+.bookmark-min-controls .action {
+	margin: 0 2px;
 	cursor: pointer;
 }
 
@@ -160,9 +158,9 @@ hr {
 .reactions-button {
 	position: relative;
 	display: inline-block;
-    line-height: 24px;
+    line-height: 16px;
     vertical-align: middle;
-    margin-top: -4px;
+    margin-top: -7px;
 }
 
 .reaction-emoji {
@@ -176,10 +174,19 @@ hr {
 
 .arrow-down {
 	position: absolute;
-    bottom: 0;
-    right: -8px;
+    bottom: -5px;
+    right: -7px;
     border-radius: 50%;
     padding: 2px;
     background: white;
     border: 1px solid #a5a5a5;
+}
+
+.reaction {
+	font-size: 0.9rem;
+}
+
+.no-reaction ~ .arrow-down {
+	bottom: 0;
+	right: -5px;
 }

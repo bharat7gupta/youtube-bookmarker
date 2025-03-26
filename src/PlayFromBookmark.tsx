@@ -1,3 +1,4 @@
+import PlayIcon from "./icons/PlayIcon";
 import { Bookmark } from "./types/bookmark";
 
 interface PlayFromBookmarkProps {
@@ -12,11 +13,6 @@ export default function PlayFromBookmark({ bookmark }: PlayFromBookmarkProps) {
     }
 
     return (
-        <img
-            className="action"
-            src="../icons/play.png"
-            title="Start play from bookmark"
-            onClick={onPlayFromBookmarkClick}
-        />
+        <PlayIcon title="Start play from bookmark" onClick={onPlayFromBookmarkClick} className="action" />
     )
 }

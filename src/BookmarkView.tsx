@@ -7,6 +7,8 @@ import Reactions from "./Reactions";
 
 import { getFormattedTime } from "./common";
 import { Bookmark } from "./types/bookmark";
+import EditIcon from "./icons/EditIcon";
+import SaveIcon from "./icons/SaveIcon";
 
 interface BookmarkViewProps {
     videoId: string;
@@ -71,12 +73,10 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
             </div>
 
             <div class="bookmark-controls">
-                <img
-                    src={isEditingDesc ? '../icons/save.png' : '../icons/edit.png'}
-                    className="action"
-                    title={isEditingDesc ? 'Save bookmark description' : 'Edit bookmark description'}
-                    onClick={handleEditClick}
-                />
+                {isEditingDesc
+                    ? <SaveIcon title="Save bookmark description" onClick={handleEditClick} className="action" />
+                    : <EditIcon title="Edit bookmark description" onClick={handleEditClick} className="action" />
+                }
                 <PlayFromBookmark bookmark={bookmark} />
                 <CopyBookmarkLink videoId={videoId} bookmark={bookmark} />
                 <DeleteBookmark bookmark={bookmark} onDeleteBookmark={onDeleteBookamrk} />

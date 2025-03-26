@@ -2,7 +2,8 @@ import { useRef, useState } from "preact/hooks";
 import { useClickInside } from "./hooks/useClickInside";
 import { useClickOutside } from "./hooks/useClickOutside";
 import { Bookmark } from "./types/bookmark";
-import DownArrow from "./icons/DownArrow";
+import DownArrowIcon from "./icons/DownArrowIcon";
+import HappyIcon from "./icons/HappyIcon";
 
 const ALL_REACTIONS = [
     '😀',
@@ -32,10 +33,12 @@ export default function Reactions({ bookmark, onClick }: ReactionsProps) {
             <span
                 className="reactions-button"
                 onClick={() => setShowReactions(toggle => !toggle)}
-                style={{ filter: `grayscale(${bookmark.reaction ? 0 : 1 })` }}
             >
-                {bookmark.reaction ?? '😃'}
-                <DownArrow width={6} height={6} className="arrow-down" />
+                {bookmark.reaction
+                    ? <span className="reaction">{bookmark.reaction}</span> 
+                    : <HappyIcon className="no-reaction" />}
+
+                <DownArrowIcon className="arrow-down" />
             </span>
 
             {showReactions ? (

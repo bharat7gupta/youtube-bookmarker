@@ -1,6 +1,7 @@
 import { Bookmark } from "./types/bookmark";
 import { getFormattedTime } from "./common";
 import CopyBookmarkLink from "./CopyBookmarkLink";
+import PlayIcon from "./icons/PlayIcon";
 
 interface BookmarkMinViewProps {
     videoId: string;
@@ -20,7 +21,7 @@ export default function BookmarkMinView({ videoId, bookmark }: BookmarkMinViewPr
             <div class="bookmark-desc" title={bookmark.desc}>{bookmark.desc}</div>
 
             <div class="bookmark-min-controls">
-                <img src="../icons/play.png" title="Play" onClick={onPlayClick} />
+                <PlayIcon title="Play" onClick={onPlayClick} className="action" />
                 <CopyBookmarkLink videoId={videoId} bookmark={bookmark} />
             </div>
         </div>

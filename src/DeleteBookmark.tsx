@@ -1,3 +1,4 @@
+import DeleteIcon from "./icons/DeleteIcon";
 import { Bookmark } from "./types/bookmark";
 
 interface DeleteBookmarkProps {
@@ -6,7 +7,7 @@ interface DeleteBookmarkProps {
 }
 
 export default function DeleteBookmark({ bookmark, onDeleteBookmark }: DeleteBookmarkProps) {
-    const onDeleteBookmarkClick = (e) => {
+    const onDeleteBookmarkClick = () => {
         const { time: bookmarkTime } = bookmark;
 
         // send message to delete bookmark from page
@@ -19,11 +20,6 @@ export default function DeleteBookmark({ bookmark, onDeleteBookmark }: DeleteBoo
     
 
     return (
-        <img
-            src="../icons/delete.png" 
-            className="action"
-            title="Delete bookmark" 
-            onClick={onDeleteBookmarkClick}
-        />
+        <DeleteIcon title="Delete bookmark" onClick={onDeleteBookmarkClick} className="action" />
     );
 }
