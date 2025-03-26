@@ -19,6 +19,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 	const loopSectionClassName = 'ct-bookmarks-loop';
 	const bookmarkDescPrefix = 'Bookmark at ';
 	const hideBookmarkClassName = 'ct-hide-bookmark';
+	const bookmarkReactionClassName = 'ct-bookmark-reaction';
 
 	/* DOM elements */
 	let ytRightControls, ytPlayer, ytProgressBar;
@@ -62,6 +63,17 @@ import { Bookmark, LoopData } from './types/bookmark';
 				loopData = {} as LoopData;
 				ytPlayer && ytPlayer.removeEventListener('timeupdate', loopBetweenBookmarks);
 				removeLoopSectionHighlight();
+				break;
+			case 'ADD_REACTION':
+				const bookmarkId = bookmarkClassName + '-' + data.value.time
+				const bookmarkElement = document.getElementById(bookmarkId);
+
+				// clear previous children
+				while (bookmarkElement.firstChild) {
+					bookmarkElement.firstChild.remove();
+				}
+
+				addBookmarkReaction(bookmarkElement, data.value.reaction);
 				break;
 			default:
 				break;
@@ -135,14 +147,25 @@ import { Bookmark, LoopData } from './types/bookmark';
 	function addBookmark(newBookmark) {
 		chrome.storage.sync.get('hideBookmarks', function(data) {
 			const videoDuration = getVideoDuration();
-			const bookmark = document.createElement('div');
+			const bookmarkElement = document.createElement('div');
 
-			bookmark.id = bookmarkClassName + '-' + newBookmark.time;
-			bookmark.className = bookmarkClassName + (data['hideBookmarks'] ? ` ${hideBookmarkClassName}` : '');
-			bookmark.style.left = ((newBookmark.time / videoDuration) * 100) + '%';
+			bookmarkElement.id = bookmarkClassName + '-' + newBookmark.time;
+			bookmarkElement.className = bookmarkClassName + (data['hideBookmarks'] ? ` ${hideBookmarkClassName}` : '');
+			bookmarkElement.style.left = ((newBookmark.time / videoDuration) * 100) + '%';
 
-			ytProgressBar.appendChild(bookmark);
+			addBookmarkReaction(bookmarkElement, newBookmark.reaction);
+
+			ytProgressBar.appendChild(bookmarkElement);
 		});
+	}
+
+	function addBookmarkReaction(bookmarkElement, reaction) {
+		if (bookmarkElement && reaction) {
+			const bookmarkReactionElement = document.createElement('div');
+			bookmarkReactionElement.className = bookmarkReactionClassName;
+			bookmarkReactionElement.innerText = reaction;
+			bookmarkElement.appendChild(bookmarkReactionElement);
+		}
 	}
 
 	/* Show bookmark button */

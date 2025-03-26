@@ -125,6 +125,29 @@ export default function CurrentBookmarks() {
         }
     };
 
+    const onBookmarkReaction = (bookmark: Bookmark, reaction: string) => {
+        const updatedBookmarks = bookmarks.map((b) => {
+            if (b.time !== bookmark.time) return b;
+
+            const newReaction = b.reaction === reaction ? undefined : reaction;
+            return { ...b, reaction: newReaction };
+        });
+
+        setBookmarks(updatedBookmarks);
+
+        chrome.storage.sync.set({[currentVideoId]: JSON.stringify(updatedBookmarks)});
+
+        chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
+            const existingBookmark = bookmarks.find(b => b.time === bookmark.time);
+            const newReaction = existingBookmark.reaction === reaction ? undefined : reaction;
+
+            chrome.tabs.sendMessage(activeTab.id, {
+                type: 'ADD_REACTION',
+                value: { time: bookmark.time, reaction: newReaction }
+            });
+        });
+    };
+
     let filteredBookmarks: Bookmark[] = [];
     if (!searchText || searchText.trim().length === 0) {
         filteredBookmarks = bookmarks;
@@ -162,6 +185,7 @@ export default function CurrentBookmarks() {
                                 videoId={currentVideoId}
                                 bookmark={bookmark}
                                 onBookmarkDescUpdate={onBookmarkDescUpdate}
+                                onBookmarkReaction={onBookmarkReaction}
                                 onDeleteBookamrk={handleDeleteBookmark}
                                 onSelect={handleBookmarkSelect}
                                 selected={selectedBookmarks.some(b => b.time === bookmark.time)}

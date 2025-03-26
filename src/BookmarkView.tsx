@@ -3,6 +3,7 @@ import { useState, useEffect } from "preact/hooks";
 import PlayFromBookmark from "./PlayFromBookmark";
 import CopyBookmarkLink from "./CopyBookmarkLink";
 import DeleteBookmark from "./DeleteBookmark";
+import Reactions from "./Reactions";
 
 import { getFormattedTime } from "./common";
 import { Bookmark } from "./types/bookmark";
@@ -13,11 +14,12 @@ interface BookmarkViewProps {
     selectionDisabled: boolean;
     selected: boolean;
     onBookmarkDescUpdate: (bookmarkTime: number, bookmarkDesc: string) => void;
+    onBookmarkReaction: (bookmar: Bookmark, reaction: string) => void;
     onDeleteBookamrk: (bookmarkTime: number) => void;
     onSelect: (bookmark: Bookmark, selected: boolean) => void;
 }
 
-export default function BookmarkView({ videoId, bookmark, selectionDisabled, selected, onBookmarkDescUpdate, onDeleteBookamrk, onSelect }: BookmarkViewProps) {
+export default function BookmarkView({ videoId, bookmark, selectionDisabled, selected, onBookmarkDescUpdate, onBookmarkReaction, onDeleteBookamrk, onSelect }: BookmarkViewProps) {
     const [isEditingDesc, setIsEditingDesc] = useState<boolean>(false);
     const [bookmarkDescText, setBookmarkDescText] = useState<string>(bookmark.desc);
 
@@ -39,6 +41,10 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
             setIsEditingDesc(false);
         }
     }
+
+    const handleReaction = (reaction: string) => {
+        onBookmarkReaction(bookmark, reaction);
+    };
 
     return (
         <div key={bookmark.time} class="bookmark">
@@ -67,12 +73,14 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
             <div class="bookmark-controls">
                 <img
                     src={isEditingDesc ? '../icons/save.png' : '../icons/edit.png'}
+                    className="action"
                     title={isEditingDesc ? 'Save bookmark description' : 'Edit bookmark description'}
                     onClick={handleEditClick}
                 />
                 <PlayFromBookmark bookmark={bookmark} />
                 <CopyBookmarkLink videoId={videoId} bookmark={bookmark} />
-                <DeleteBookmark bookmark={bookmark} onDeleteBookmark={onDeleteBookamrk}/>
+                <DeleteBookmark bookmark={bookmark} onDeleteBookmark={onDeleteBookamrk} />
+                <Reactions bookmark={bookmark} onClick={handleReaction} />
             </div>
         </div>
     )

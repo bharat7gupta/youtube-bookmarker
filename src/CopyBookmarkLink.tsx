@@ -12,5 +12,12 @@ export default function CopyBookmarkLink({ bookmark, videoId }: CopyBookmarkLink
         navigator.clipboard.writeText(url);
     }
 
-    return <img src="../icons/copy-link.png" title="Copy bookmark link" onClick={onCopyBookmarkLinkClick} />;
+    return (
+        <img
+            src="../icons/copy-link.png"
+            className="action"
+            title="Copy bookmark link"
+            onClick={onCopyBookmarkLinkClick}
+        />
+    );
 }

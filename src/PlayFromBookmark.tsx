@@ -12,6 +12,11 @@ export default function PlayFromBookmark({ bookmark }: PlayFromBookmarkProps) {
     }
 
     return (
-        <img src="../icons/play.png" title="Start play from bookmark" onClick={onPlayFromBookmarkClick} />
+        <img
+            className="action"
+            src="../icons/play.png"
+            title="Start play from bookmark"
+            onClick={onPlayFromBookmarkClick}
+        />
     )
 }

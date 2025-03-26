@@ -18,5 +18,12 @@ export default function DeleteBookmark({ bookmark, onDeleteBookmark }: DeleteBoo
     }
     
 
-    return <img src="../icons/delete.png" title="Delete bookmark" onClick={onDeleteBookmarkClick} />
+    return (
+        <img
+            src="../icons/delete.png" 
+            className="action"
+            title="Delete bookmark" 
+            onClick={onDeleteBookmarkClick}
+        />
+    );
 }
