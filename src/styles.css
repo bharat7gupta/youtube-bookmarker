@@ -16,7 +16,11 @@
 
 .ct-bookmark-reaction {
 	position: absolute;
-	bottom: 12px;
+	bottom: 16px;
 	font-size: 2.5rem;
-	transform: translateX(-45%);
+	transform: translateX(-42%) scaleY(1.6);
+}
+
+.ytp-progress-bar-container:hover .ct-bookmark-reaction {
+	transform: translate(-42%, 30%) scaleY(0.6);
 }
