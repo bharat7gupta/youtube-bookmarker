@@ -22,7 +22,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 	const bookmarkReactionClassName = 'ct-bookmark-reaction';
 
 	/* DOM elements */
-	let ytRightControls, ytPlayer, ytProgressBar;
+	let ytRightControls, ytPlayer, ytTimedmarkersContainer;
 
 	/* respond to messages from background or popup pages */
 	chrome.runtime.onMessage.addListener(function(data) {
@@ -92,7 +92,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 		ytRightControls = document.getElementsByClassName('ytp-right-controls')[0];
 		ytPlayer = document.getElementsByClassName("html5-main-video")[0];
-		ytProgressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
+		ytTimedmarkersContainer = document.getElementsByClassName("ytp-timed-markers-container")[0];
 
 		// check if an ad is playing. If yes, hide bookamarks and recalculate bookmark positions
 		adCheckInterval = setInterval(adChecker, 1000);
@@ -151,11 +151,12 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 			bookmarkElement.id = bookmarkClassName + '-' + newBookmark.time;
 			bookmarkElement.className = bookmarkClassName + (data['hideBookmarks'] ? ` ${hideBookmarkClassName}` : '');
-			bookmarkElement.style.left = ((newBookmark.time / videoDuration) * 100) + '%';
+			const relativeLeftPosition = ((newBookmark.time / videoDuration) * 100);
+			bookmarkElement.style.left = `calc(${relativeLeftPosition}% - 2px)`;
 
 			addBookmarkReaction(bookmarkElement, newBookmark.reaction);
 
-			ytProgressBar.appendChild(bookmarkElement);
+			ytTimedmarkersContainer.appendChild(bookmarkElement);
 		});
 	}
 
@@ -267,7 +268,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 
 	/* Show all bookmarks */
 	function showVideoBookmarks(videoDuration) {
-		ytProgressBar && videoBookmarks.forEach(function(bookmark) {
+		ytTimedmarkersContainer && videoBookmarks.forEach(function(bookmark) {
 			addBookmark(bookmark);
 		});
 	}
@@ -333,7 +334,7 @@ import { Bookmark, LoopData } from './types/bookmark';
 			loopSection.style.left = ((loopData.startTime / videoDuration) * 100) + '%';
 			loopSection.style.right = (100 - ((loopData.endTime / videoDuration) * 100)) + '%';
 
-			ytProgressBar.appendChild(loopSection);
+			ytTimedmarkersContainer.appendChild(loopSection);
 		});
 	}
 
