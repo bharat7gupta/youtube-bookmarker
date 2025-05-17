@@ -8,6 +8,7 @@ import ContentApp, { ContentAppRef } from './ContentApp';
 import prependPortal from './prependPortal';
 import { getFormattedTime } from '../common';
 import contentReducer, { initialState } from './contentReducer';
+import { VideoInitData } from '../types/content';
 
 function YouTubeIntegration() {
   const contentAppRef = useRef<ContentAppRef>(null);
@@ -16,7 +17,7 @@ function YouTubeIntegration() {
   
   const [state, dispatch] = useReducer(contentReducer, initialState);
 
-  const onVideoDataInit = (videoData: unknown) => {
+  const onVideoDataInit = (videoData: VideoInitData) => {
     dispatch({ type: 'VIDEO_DATA_INIT', videoData });
   };
 

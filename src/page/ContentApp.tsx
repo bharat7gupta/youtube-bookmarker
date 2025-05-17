@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 import { Bookmark, LoopData } from '../types/bookmark';
-import { ContentReducerState } from './contentReducer';
+import { VideoInitData } from '../types/content';
 
 interface ContentAppProps {
   videoId: string;
   loopData: LoopData;
-  onVideoDataInit: (videoData: Pick<ContentReducerState, 'bookmarks' | 'lastModifiedByVideoId' | 'videoDuration'>) => void;
+  onVideoDataInit: (videoData: VideoInitData) => void;
   onAdPlayStatusChange: (isPlayingAd: boolean) => void;
   onMessage: (data: unknown & { type: string }) => void;
   onAddBookmark: () => void;

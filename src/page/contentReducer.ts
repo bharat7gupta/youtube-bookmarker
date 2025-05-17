@@ -1,14 +1,5 @@
-import { Bookmark, LoopData } from "../types/bookmark";
-
-export interface ContentReducerState {
-  videoId: string | null;
-  bookmarks: Bookmark[];
-  videoDuration: number | null;
-  hideBookmarks: boolean;
-  loopData: LoopData | null;
-  isPlayingAd: boolean;
-  lastModifiedByVideoId: Record<string, number>
-}
+import { Bookmark } from "../types/bookmark";
+import { ContentReducerState, VideoInitData } from "../types/content";
 
 export const initialState: ContentReducerState = {
   videoId: null as string | null,
@@ -27,7 +18,7 @@ function contentReducer(state: ContentReducerState, action) {
       return { ...initialState, videoId };
     }
     case 'VIDEO_DATA_INIT': {
-      const { bookmarks, lastModifiedByVideoId, videoDuration } = action.videoData;
+      const { bookmarks, lastModifiedByVideoId, videoDuration } = action.videoData as VideoInitData;
       return {
         ...state,
         bookmarks,
