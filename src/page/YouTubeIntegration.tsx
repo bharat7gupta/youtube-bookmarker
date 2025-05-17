@@ -87,7 +87,7 @@ function YouTubeIntegration() {
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const ytRightControls = document.getElementsByClassName('ytp-right-controls')[0] as HTMLElement;
-      const ytTimedmarkersContainer = document.getElementsByClassName('ytp-timed-markers-container')[0] as HTMLElement;
+      const ytTimedmarkersContainer = document.getElementsByClassName('ytp-timed-markers-container')[0] as HTMLDivElement;
 
       if (ytRightControls && !bookmarkButtonContainer) {
         setBookmarkButtonContainer(ytRightControls);
@@ -124,6 +124,14 @@ function YouTubeIntegration() {
       bookmarkButtonContainer
     );
   };
+
+  const setYTTooltipVisibility = (visibility: 'visible' | 'hidden') => {
+    const ytTooltipElement = document.getElementsByClassName('ytp-tooltip')[0] as HTMLDivElement;
+
+    if (ytTooltipElement) {
+      ytTooltipElement.style.visibility = visibility;
+    }
+  }
   
   const renderBookmarksPortal = (): VNode | null => {
     if (!bookmarksContainer || state.videoDuration === null) {
@@ -137,7 +145,13 @@ function YouTubeIntegration() {
             key: bookmark.time,
             bookmark,
             duration: state.videoDuration,
-            hidden: state.hideBookmarks
+            hidden: state.hideBookmarks,
+            onMouseEnter: () => {
+              setYTTooltipVisibility('hidden');
+            },
+            onMouseLeave: () => {
+              setYTTooltipVisibility('visible');
+            }
           })
         ),
         state.loopData?.isLooping && 

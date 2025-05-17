@@ -19,8 +19,37 @@
 	bottom: 16px;
 	font-size: 2.5rem;
 	transform: translateX(-42%) scaleY(1.6);
+	pointer-events: none;
 }
 
 .ytp-progress-bar-container:hover .ct-bookmark-reaction {
 	transform: translate(-42%, 30%) scaleY(0.6);
+	opacity: 0.3;
+}
+
+.ct-bookmark-tooltip {
+	position: absolute;
+	bottom: -12px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.8);
+	color: white;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.2s, visibility 0.2s;
+	z-index: 100;
+	transform: translateX(-42%) scaleY(0.6);
+}
+
+.ct-bookmark:hover .ct-bookmark-tooltip {
+	opacity: 1;
+	visibility: visible;
+}
+
+.ct-bookmark:hover .ct-bookmark-reaction {
+	display: none;
 }
