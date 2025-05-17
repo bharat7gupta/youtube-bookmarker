@@ -1,12 +1,13 @@
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import preact from '@preact/preset-vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	build: {
 		rollupOptions: {
 			input: {
-				'contentScript.js': 'src/contentScript.ts'
+				'contentScript.js': 'src/contentScript.tsx'
 			},
 			output: [
 				{
@@ -17,6 +18,7 @@ export default defineConfig({
 		},
 	},
 	plugins: [
+		preact(),
 		viteStaticCopy({
 			targets: [
 				{

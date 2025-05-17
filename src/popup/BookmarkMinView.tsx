@@ -1,7 +1,7 @@
-import { Bookmark } from "./types/bookmark";
-import { getFormattedTime } from "./common";
+import { Bookmark } from "../types/bookmark";
+import { getFormattedTime } from "../common";
 import CopyBookmarkLink from "./CopyBookmarkLink";
-import PlayIcon from "./icons/PlayIcon";
+import PlayIcon from "../icons/PlayIcon";
 
 interface BookmarkMinViewProps {
     videoId: string;

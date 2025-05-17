@@ -19,7 +19,7 @@ export function App() {
 
     const onHideBookmarkCheckBoxClick = (e) => {
         chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
-            chrome.tabs.sendMessage(activeTab.id, { type: 'HIDE_BOOKMARKS', value: e.target.checked });
+            chrome.tabs.sendMessage(activeTab.id, { type: 'HIDE_BOOKMARKS', hideBookmarks: e.target.checked });
             chrome.storage.sync.set({ 'hideBookmarks': e.target.checked });
             setHideBookmarksToggle(e.target.checked);
         });

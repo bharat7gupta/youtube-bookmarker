@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks"
-import { Bookmark } from "./types/bookmark";
+import { Bookmark } from "../types/bookmark";
 import VideoBookmarksCard from "./VideoBookmarksCard";
 
 export default function AllBookmarks() {

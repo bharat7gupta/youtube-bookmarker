@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks"
-import { Bookmark, LoopData } from "./types/bookmark";
+import { Bookmark, LoopData } from "../types/bookmark";
 import BookmarkView from "./BookmarkView";
 
 const APP_PREFIX = 'ytbmr';
@@ -143,7 +143,8 @@ export default function CurrentBookmarks() {
 
             chrome.tabs.sendMessage(activeTab.id, {
                 type: 'ADD_REACTION',
-                value: { time: bookmark.time, reaction: newReaction }
+                bookmarkTime: bookmark.time,
+                reaction: newReaction
             });
         });
     };

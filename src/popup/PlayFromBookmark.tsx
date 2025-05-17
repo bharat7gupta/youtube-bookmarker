@@ -1,5 +1,5 @@
-import PlayIcon from "./icons/PlayIcon";
-import { Bookmark } from "./types/bookmark";
+import PlayIcon from "../icons/PlayIcon";
+import { Bookmark } from "../types/bookmark";
 
 interface PlayFromBookmarkProps {
     bookmark: Bookmark;
@@ -8,7 +8,7 @@ interface PlayFromBookmarkProps {
 export default function PlayFromBookmark({ bookmark }: PlayFromBookmarkProps) {
     function onPlayFromBookmarkClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
-            chrome.tabs.sendMessage(activeTab.id, { type: 'PLAY_FROM_BOOKMARK', value: bookmark.time });
+            chrome.tabs.sendMessage(activeTab.id, { type: 'PLAY_FROM_BOOKMARK', bookmarkTime: bookmark.time });
         });
     }
 

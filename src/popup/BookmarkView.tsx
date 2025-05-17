@@ -5,10 +5,10 @@ import CopyBookmarkLink from "./CopyBookmarkLink";
 import DeleteBookmark from "./DeleteBookmark";
 import Reactions from "./Reactions";
 
-import { getFormattedTime } from "./common";
-import { Bookmark } from "./types/bookmark";
-import EditIcon from "./icons/EditIcon";
-import SaveIcon from "./icons/SaveIcon";
+import { getFormattedTime } from "../common";
+import { Bookmark } from "../types/bookmark";
+import EditIcon from "../icons/EditIcon";
+import SaveIcon from "../icons/SaveIcon";
 
 interface BookmarkViewProps {
     videoId: string;

@@ -1,5 +1,5 @@
-import LinkIcon from "./icons/LinkIcon";
-import { Bookmark } from "./types/bookmark";
+import LinkIcon from "../icons/LinkIcon";
+import { Bookmark } from "../types/bookmark";
 
 interface CopyBookmarkLinkProps {
     videoId: string;

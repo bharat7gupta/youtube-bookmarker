@@ -1,9 +1,9 @@
 import { useRef, useState } from "preact/hooks";
-import { useClickInside } from "./hooks/useClickInside";
-import { useClickOutside } from "./hooks/useClickOutside";
-import { Bookmark } from "./types/bookmark";
-import DownArrowIcon from "./icons/DownArrowIcon";
-import HappyIcon from "./icons/HappyIcon";
+import { useClickInside } from "../hooks/useClickInside";
+import { useClickOutside } from "../hooks/useClickOutside";
+import { Bookmark } from "../types/bookmark";
+import DownArrowIcon from "../icons/DownArrowIcon";
+import HappyIcon from "../icons/HappyIcon";
 
 const ALL_REACTIONS = [
     '😀',
