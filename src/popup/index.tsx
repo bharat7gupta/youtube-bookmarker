@@ -44,7 +44,7 @@ export function App() {
 
   return (
     <div class="app-container">
-      <div class="row top-row">
+      <div class="top-row">
         <div className="nav-buttons">
           {showBackButton ? (
             <button className="nav-button" onClick={() => setCurrentView('current')}>
