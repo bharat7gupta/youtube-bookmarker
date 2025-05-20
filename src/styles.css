@@ -29,25 +29,34 @@
 
 .ct-bookmark-tooltip {
 	position: absolute;
-	bottom: -12px;
+	bottom: -8px;
 	left: 50%;
 	transform: translateX(-50%);
-	background: rgba(0, 0, 0, 0.8);
-	color: white;
-	padding: 4px 8px;
+	display: flex;
+	gap: 12px;
+	background: white;
+	color: #0F0F0F;
+	padding: 12px;
 	border-radius: 4px;
-	font-size: 12px;
+	font-size: 18px;
 	white-space: nowrap;
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 0.2s, visibility 0.2s;
+	pointer-events: none;
 	z-index: 100;
-	transform: translateX(-42%) scaleY(0.6);
+	transform: translateX(-42%) scaleY(0.5);
 }
 
 .ct-bookmark:hover .ct-bookmark-tooltip {
 	opacity: 1;
 	visibility: visible;
+	pointer-events: auto;
+}
+
+.ct-bookmark-tooltip > [contenteditable]:focus {
+	outline: none;
+	min-width: 60px;
 }
 
 .ct-bookmark:hover .ct-bookmark-reaction {

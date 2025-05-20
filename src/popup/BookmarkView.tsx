@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks";
 import PlayFromBookmark from "./PlayFromBookmark";
 import CopyBookmarkLink from "./CopyBookmarkLink";
 import DeleteBookmark from "./DeleteBookmark";
-import Reactions from "./Reactions";
+import Reactions from "../common/Reactions/Reactions";
 
 import { getFormattedTime } from "../common";
 import { Bookmark } from "../types/bookmark";
