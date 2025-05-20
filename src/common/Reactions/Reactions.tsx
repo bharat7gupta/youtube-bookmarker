@@ -20,26 +20,24 @@ interface ReactionsProps {
 }
 
 export default function Reactions({ bookmark, onClick }: ReactionsProps) {
-  const reactionsRef = useRef(null);
-
   return (
-    <div className="reactions action" ref={reactionsRef}>
-      <span className="reactions-button">
+    <div className="reactions action">
+      <span className="reactions-button" style={bookmark.reaction ? { marginTop: '-7px' } : null}>
         {bookmark.reaction
           ? <span>{bookmark.reaction}</span>
-          : <HappyIcon className="no-reaction" />}
-
-        <div className="reactions-panel">
-          {ALL_REACTIONS.map(reaction => (
-            <span
-              className="reaction-emoji"
-              onClick={() => onClick(reaction)}
-            >
-              {reaction}
-            </span>
-          ))}
-        </div>
+          : <HappyIcon />}
       </span>
+
+      <div className="reactions-panel">
+        {ALL_REACTIONS.map(reaction => (
+          <span
+            className="reaction-emoji"
+            onClick={() => onClick(reaction)}
+          >
+            {reaction}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
