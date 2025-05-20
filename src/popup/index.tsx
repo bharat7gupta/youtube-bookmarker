@@ -2,57 +2,89 @@ import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import CurrentBookmarks from './CurrentBookmarks';
 import AllBookmarks from './AllBookmarks';
+import ImportBookmarks from './ImportBookmarks';
+import ExportBookmarks from './ExportBookmarks';
+
+type View = 'current' | 'all' | 'import' | 'export';
 
 export function App() {
-    const [showAllBookmarksToggle, setShowAllBookmarksToggle] = useState(false);
-    const [hideBookmarksToggle, setHideBookmarksToggle] = useState(false);
+  const [currentView, setCurrentView] = useState<View>('current');
+  const [hideBookmarksToggle, setHideBookmarksToggle] = useState(false);
 
-    useEffect(() => {
-        chrome.storage.sync.get('hideBookmarks', function(data) {
-            setHideBookmarksToggle(data['hideBookmarks'] || false);
-        });
-    }, []);
+  useEffect(() => {
+    chrome.storage.sync.get('hideBookmarks', function (data) {
+      setHideBookmarksToggle(data['hideBookmarks'] || false);
+    });
+  }, []);
 
-    const handleToggle = () => {
-        setShowAllBookmarksToggle(toggle => !toggle);
-    };
+  const onHideBookmarkCheckBoxClick = (e) => {
+    chrome.tabs.query({ currentWindow: true, active: true }, function ([activeTab]) {
+      chrome.tabs.sendMessage(activeTab.id, { type: 'HIDE_BOOKMARKS', hideBookmarks: e.target.checked });
+      chrome.storage.sync.set({ 'hideBookmarks': e.target.checked });
+      setHideBookmarksToggle(e.target.checked);
+    });
+  }
 
-    const onHideBookmarkCheckBoxClick = (e) => {
-        chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
-            chrome.tabs.sendMessage(activeTab.id, { type: 'HIDE_BOOKMARKS', hideBookmarks: e.target.checked });
-            chrome.storage.sync.set({ 'hideBookmarks': e.target.checked });
-            setHideBookmarksToggle(e.target.checked);
-        });
+  const renderView = () => {
+    switch (currentView) {
+      case 'all':
+        return <AllBookmarks />;
+      case 'import':
+        return <ImportBookmarks />;
+      case 'export':
+        return <ExportBookmarks />;
+      case 'current':
+      default:
+        return <CurrentBookmarks />;
     }
+  };
 
-    return (
-        <div class="app-container">
-            <div class="row top-row">
-                <div className="show-all-bookmarks">
-                    <a href="javascript:void(0)" onClick={handleToggle}>
-                        {showAllBookmarksToggle ? 'Back' : 'Show all saved bookmarks'}
-                    </a>
-                </div>
-                <div className="hide-bookmarks">
-                    <span>
-                        Hide bookmarks&nbsp;
-                        <input type="checkbox" className="inline-checkbox" checked={hideBookmarksToggle} onInput={onHideBookmarkCheckBoxClick} />
-                    </span>
-                </div>
-            </div>
+  const isMainView = currentView === 'current';
+  const showBackButton = !isMainView;
 
-            {showAllBookmarksToggle ? <AllBookmarks /> : <CurrentBookmarks />}
+  return (
+    <div class="app-container">
+      <div class="row top-row">
+        <div className="nav-buttons">
+          {showBackButton ? (
+            <button className="nav-button" onClick={() => setCurrentView('current')}>
+              ← Back
+            </button>
+          ) : (
+            <>
+              <button className="nav-button" onClick={() => setCurrentView('all')}>
+                All Bookmarks
+              </button>
+              <button className="nav-button" onClick={() => setCurrentView('import')}>
+                Import
+              </button>
+              <button className="nav-button" onClick={() => setCurrentView('export')}>
+                Export
+              </button>
+            </>
+          )}
         </div>
-    );
-}
-
-function Resource(props) {
-    return (
-        <a href={props.href} target="_blank" class="resource">
-            <h2>{props.title}</h2>
-            <p>{props.description}</p>
-        </a>
-    );
+        {isMainView && (
+          <button 
+            className="hide-bookmarks nav-button"
+            onClick={(e) => {
+              const newValue = !hideBookmarksToggle;
+              onHideBookmarkCheckBoxClick({ target: { checked: newValue } });
+            }}
+          >
+            Hide bookmarks
+            <input 
+              type="checkbox" 
+              className="hide-checkbox" 
+              checked={hideBookmarksToggle} 
+              onChange={() => {}} // No-op to suppress React warning
+            />
+          </button>
+        )}
+      </div>
+      {renderView()}
+    </div>
+  );
 }
 
 render(<App />, document.getElementById('app'));
