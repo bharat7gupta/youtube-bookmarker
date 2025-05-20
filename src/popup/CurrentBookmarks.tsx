@@ -200,23 +200,22 @@ export default function CurrentBookmarks() {
                 </div>
             </div>
 
-            {bookmarks.length >= 2 ? (
-                <>
-                    <br/><hr />
-                    <div class="row loop-bookmarks">
-                        <span>
-                            Loop between selected bookmarks
+            {bookmarks.length >= 2 && (
+                <div class="row">
+                    <div class="loop-bookmarks">
+                        <label class="loop-toggle">
+                            <span>Loop between selected bookmarks</span>
                             <input
                                 type="checkbox"
-                                className="inline-checkbox"
-                                disabled={selectedBookmarks.length < 2}
+                                class="loop-checkbox"
                                 checked={isLooping}
-                                onInput={() => setIsLooping(isLooping => !isLooping)}
+                                disabled={selectedBookmarks.length < 2}
+                                onChange={() => setIsLooping(!isLooping)}
                             />
-                        </span>
+                        </label>
                     </div>
-                </>
-            ) : null}
+                </div>
+            )}
         </>
     )
 }
