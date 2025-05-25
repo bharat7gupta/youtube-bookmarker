@@ -7,7 +7,7 @@ export default function ImportBookmarks() {
   const handleImport = () => {
     try {
       const bookmarks = JSON.parse(importData);
-      chrome.storage.sync.set({ importedBookmarks: bookmarks }, () => {
+      chrome.storage.sync.set(bookmarks, () => {
         window.close();
       });
     } catch (e) {
