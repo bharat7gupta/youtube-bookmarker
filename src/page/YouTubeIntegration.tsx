@@ -9,6 +9,7 @@ import prependPortal from './prependPortal';
 import { getFormattedTime } from '../common';
 import contentReducer, { initialState } from './contentReducer';
 import { VideoInitData } from '../types/content';
+import { Bookmark } from '../types/bookmark';
 
 function YouTubeIntegration() {
   const contentAppRef = useRef<ContentAppRef>(null);
@@ -114,6 +115,18 @@ function YouTubeIntegration() {
     return () => observer.disconnect();
   }, [bookmarkButtonContainer, bookmarksContainer]);
 
+  const handleBookmarkDescChange = (bookmarkTime: number, bookmarkDesc: string) => {
+    const updatedBookmarks = state.bookmarks.map((bookmark: Bookmark) => {
+      if (bookmark.time == bookmarkTime) {
+          return { ...bookmark, desc: bookmarkDesc };
+      }
+
+      return bookmark;
+    });
+
+    chrome.storage.sync.set({[state.videoId]: JSON.stringify(updatedBookmarks)});
+  };
+
   const renderBookmarkButtonPortal = (): VNode | null => {
     if (!bookmarkButtonContainer || !contentAppRef.current) return null;
 
@@ -152,9 +165,7 @@ function YouTubeIntegration() {
             onMouseLeave: () => {
               setYTTooltipVisibility('visible');
             },
-            onDescriptionChange: () => {
-              console.log('updating desc....')
-            },
+            onDescriptionChange: handleBookmarkDescChange,
             onBookmarkReaction: () => {
               // TODO
             },
