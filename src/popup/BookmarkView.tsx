@@ -16,7 +16,7 @@ interface BookmarkViewProps {
     selectionDisabled: boolean;
     selected: boolean;
     onBookmarkDescUpdate: (bookmarkTime: number, bookmarkDesc: string) => void;
-    onBookmarkReaction: (bookmar: Bookmark, reaction: string) => void;
+    onBookmarkReaction: (bookmarkTime: number, reaction: string) => void;
     onDeleteBookamrk: (bookmarkTime: number) => void;
     onSelect: (bookmark: Bookmark, selected: boolean) => void;
 }
@@ -45,7 +45,7 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
     }
 
     const handleReaction = (reaction: string) => {
-        onBookmarkReaction(bookmark, reaction);
+        onBookmarkReaction(bookmark.time, reaction);
     };
 
     return (

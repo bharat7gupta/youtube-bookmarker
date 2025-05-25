@@ -141,10 +141,13 @@ function YouTubeIntegration() {
 
     chrome.storage.sync.set({[state.videoId]: JSON.stringify(updatedBookmarks)});
 
+    const existingBookmark = state.bookmarks.find(b => b.time === bookmarkTime);
+    const newReaction = existingBookmark.reaction === reaction ? undefined : reaction;
+
     dispatch({
       type: 'ADD_REACTION',
-      bookmarkTime: bookmarkTime,
-      reaction
+      bookmarkTime,
+      reaction: newReaction
     });
   };
 

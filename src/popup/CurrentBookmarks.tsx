@@ -136,9 +136,9 @@ export default function CurrentBookmarks({ onNotYouTubeWebsite }: { onNotYouTube
         }
     };
 
-    const onBookmarkReaction = (bookmark: Bookmark, reaction: string) => {
+    const onBookmarkReaction = (bookmarkTime: number, reaction: string) => {
         const updatedBookmarks = bookmarks.map((bookmark) => {
-            if (bookmark.time !== bookmark.time) return bookmark;
+            if (bookmark.time !== bookmarkTime) return bookmark;
 
             const newReaction = bookmark.reaction === reaction ? undefined : reaction;
             return { ...bookmark, reaction: newReaction };
@@ -149,12 +149,12 @@ export default function CurrentBookmarks({ onNotYouTubeWebsite }: { onNotYouTube
         chrome.storage.sync.set({[currentVideoId]: JSON.stringify(updatedBookmarks)});
 
         chrome.tabs.query({currentWindow: true, active: true}, function([activeTab]) {
-            const existingBookmark = bookmarks.find(b => b.time === bookmark.time);
+            const existingBookmark = bookmarks.find(b => b.time === bookmarkTime);
             const newReaction = existingBookmark.reaction === reaction ? undefined : reaction;
 
             chrome.tabs.sendMessage(activeTab.id, {
                 type: 'ADD_REACTION',
-                bookmarkTime: bookmark.time,
+                bookmarkTime,
                 reaction: newReaction
             });
         });
