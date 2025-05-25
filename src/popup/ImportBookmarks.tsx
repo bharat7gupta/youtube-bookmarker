@@ -1,15 +1,23 @@
 import { useState } from 'preact/hooks';
 
-export default function ImportBookmarks() {
+export default function ImportBookmarks({ onImportComplete }: { onImportComplete: () => void }) {
   const [importData, setImportData] = useState('');
   const [importError, setImportError] = useState('');
 
+  const handleImportTextChange = (event: Event) => {
+    setImportData((event.target as HTMLTextAreaElement).value);
+  };
+
   const handleImport = () => {
     try {
+      if (!importData.trim()) {
+        setImportError('No data to import');
+        return;
+      }
+
       const bookmarks = JSON.parse(importData);
-      chrome.storage.sync.set(bookmarks, () => {
-        window.close();
-      });
+      chrome.storage.sync.set(bookmarks);
+      onImportComplete();
     } catch (e) {
       setImportError('Invalid JSON format');
     }
@@ -22,7 +30,8 @@ export default function ImportBookmarks() {
         <textarea
           className="import-textarea"
           value={importData}
-          onChange={(e) => setImportData((e.target as HTMLTextAreaElement).value)}
+          onChange={handleImportTextChange}
+          onPaste={handleImportTextChange}
           placeholder="Paste your exported bookmarks here"
         />
         {importError && (
@@ -31,10 +40,7 @@ export default function ImportBookmarks() {
           </div>
         )}
         <div className="modal-buttons">
-          <button 
-            onClick={handleImport}
-            disabled={!importData}
-          >
+          <button onClick={handleImport} className="import-button">
             Import
           </button>
         </div>

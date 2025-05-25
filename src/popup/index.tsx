@@ -5,7 +5,7 @@ import AllBookmarks from './AllBookmarks';
 import ImportBookmarks from './ImportBookmarks';
 import ExportBookmarks from './ExportBookmarks';
 
-type View = 'current' | 'all' | 'import' | 'export';
+export type View = 'current' | 'all' | 'import' | 'export';
 
 export function App() {
   const [currentView, setCurrentView] = useState<View>('current');
@@ -25,12 +25,16 @@ export function App() {
     });
   }
 
+  const handleImportComplete = () => {
+    setCurrentView('all');
+  };
+
   const renderView = () => {
     switch (currentView) {
       case 'all':
         return <AllBookmarks />;
       case 'import':
-        return <ImportBookmarks />;
+        return <ImportBookmarks onImportComplete={handleImportComplete} />;
       case 'export':
         return <ExportBookmarks />;
       case 'current':
