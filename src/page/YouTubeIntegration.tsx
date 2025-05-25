@@ -151,7 +151,13 @@ function YouTubeIntegration() {
             },
             onMouseLeave: () => {
               setYTTooltipVisibility('visible');
-            }
+            },
+            onDescriptionChange: () => {
+              console.log('updating desc....')
+            },
+            onBookmarkReaction: () => {
+              // TODO
+            },
           })
         ),
         state.loopData?.isLooping && 

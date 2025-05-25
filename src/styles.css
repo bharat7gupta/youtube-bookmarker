@@ -29,10 +29,12 @@
 
 .ct-bookmark-tooltip {
 	position: absolute;
-	bottom: -8px;
+	bottom: -12px;
 	left: 50%;
 	transform: translateX(-50%);
 	display: flex;
+	justify-content: center;
+	align-items: center;
 	gap: 12px;
 	background: white;
 	color: #0F0F0F;
@@ -54,11 +56,18 @@
 	pointer-events: auto;
 }
 
-.ct-bookmark-tooltip > [contenteditable]:focus {
-	outline: none;
-	min-width: 60px;
-}
-
 .ct-bookmark:hover .ct-bookmark-reaction {
 	display: none;
+}
+
+.ct-bookmark-tooltip .ct-bookmark-desc {
+	display: inline-block;
+	min-width: 120px;
+	flex-shrink: 0;
+	cursor: text;
+	outline: none;
+}
+
+.ct-bookmark-tooltip .ct-reactions-container {
+	margin-top: 8px;
 }

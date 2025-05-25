@@ -21,7 +21,7 @@ interface ReactionsProps {
 
 export default function Reactions({ bookmark, onClick }: ReactionsProps) {
   return (
-    <div className="reactions action">
+    <div className="reactions">
       <span className="reactions-button" style={bookmark.reaction ? { marginTop: '-7px' } : null}>
         {bookmark.reaction
           ? <span>{bookmark.reaction}</span>
