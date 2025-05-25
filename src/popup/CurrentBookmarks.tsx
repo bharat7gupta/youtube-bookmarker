@@ -4,7 +4,7 @@ import BookmarkView from "./BookmarkView";
 
 const APP_PREFIX = 'ytbmr';
 
-export default function CurrentBookmarks() {
+export default function CurrentBookmarks({ onNotYouTubeWebsite }: { onNotYouTubeWebsite: () => void }) {
     const [currentVideoId, setCurrentVideoId] = useState<string>();
     const [searchText, setSearchText] = useState<string>('');
     const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -65,6 +65,9 @@ export default function CurrentBookmarks() {
                 const videoId = urlParams.get('v');
                 setCurrentVideoId(videoId);
                 initLoopSection(videoId);
+            }
+            else {
+                onNotYouTubeWebsite();
             }
         });
     }

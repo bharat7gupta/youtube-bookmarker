@@ -25,7 +25,7 @@ export function App() {
     });
   }
 
-  const handleImportComplete = () => {
+  const setAllBookmarksView = () => {
     setCurrentView('all');
   };
 
@@ -34,12 +34,12 @@ export function App() {
       case 'all':
         return <AllBookmarks />;
       case 'import':
-        return <ImportBookmarks onImportComplete={handleImportComplete} />;
+        return <ImportBookmarks onImportComplete={setAllBookmarksView} />;
       case 'export':
         return <ExportBookmarks />;
       case 'current':
       default:
-        return <CurrentBookmarks />;
+        return <CurrentBookmarks onNotYouTubeWebsite={setAllBookmarksView} />;
     }
   };
 
