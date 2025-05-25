@@ -53,6 +53,19 @@ function contentReducer(state: ContentReducerState, action) {
         lastModifiedByVideoId: updatedLastModified
       }
     }
+    case 'BOOKMARK_DESC_UPDATE': {
+      if (state.bookmarks.length > 0 && state.videoId) {
+        const { bookmarkTime, bookmarkDesc } = action;
+        const bookmarkItemIndex = state.bookmarks.findIndex(b => b.time === bookmarkTime);
+        const updatedBookmarks = [...state.bookmarks];
+        updatedBookmarks[bookmarkItemIndex].desc = bookmarkDesc;
+
+        return {
+          ...state,
+          bookmarks: updatedBookmarks
+        }
+      }
+    }
     case 'DELETE_BOOKMARK': {
       if (state.bookmarks.length > 0 && state.videoId) {
         const { bookmarkTime } = action;
@@ -65,7 +78,7 @@ function contentReducer(state: ContentReducerState, action) {
           bookmarks: newBookmarks
         };
       }
-      
+
       return state;
     }
     case 'START_LOOP_BETWEEN_BOOKMARKS': {

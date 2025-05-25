@@ -1,6 +1,5 @@
 import { Bookmark } from "../types/bookmark";
 import BookmarkMinView from "./BookmarkMinView";
-import BookmarkView from "./BookmarkView";
 
 interface VideoBookmarksCardProps {
     videoId: string;

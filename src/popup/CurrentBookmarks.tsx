@@ -94,6 +94,10 @@ export default function CurrentBookmarks() {
     };
 
     const onBookmarkDescUpdate = (bookmarkTime: number, bookmarkDesc: string) => {
+        if (!bookmarkTime || !bookmarkDesc || bookmarkDesc.trim() === '') {
+            return;
+        }
+
         const updatedBookmarks = bookmarks.map((bookmark) => {
             if (bookmark.time == bookmarkTime) {
                 return { ...bookmark, desc: bookmarkDesc };
@@ -105,6 +109,10 @@ export default function CurrentBookmarks() {
         setBookmarks(updatedBookmarks);
 
         chrome.storage.sync.set({[currentVideoId]: JSON.stringify(updatedBookmarks)});
+
+        chrome.tabs.query({ currentWindow: true, active: true }, function ([activeTab]) {
+            chrome.tabs.sendMessage(activeTab.id, { type: 'BOOKMARK_DESC_UPDATE', bookmarkTime, bookmarkDesc });
+        });
     };
 
     const handleDeleteBookmark = (bookmarkTime: number) => {

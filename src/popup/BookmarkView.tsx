@@ -25,8 +25,8 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
     const [isEditingDesc, setIsEditingDesc] = useState<boolean>(false);
     const [bookmarkDescText, setBookmarkDescText] = useState<string>(bookmark.desc);
 
-    const handleBookmarkDescChange = (e) => {
-        setBookmarkDescText(e.target.value);
+    const handleBookmarkDescChange = (event) => {
+        setBookmarkDescText(event.target.value);
     };
 
     const handleEditClick = () => {
@@ -37,8 +37,8 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
         setIsEditingDesc(isEditing => !isEditing);
     }
 
-    const handleKeyPress = (e) => {
-        if (e.keyCode === 13) {
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
             onBookmarkDescUpdate(bookmark.time, bookmarkDescText);
             setIsEditingDesc(false);
         }
