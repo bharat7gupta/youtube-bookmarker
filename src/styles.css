@@ -10,6 +10,11 @@
 	width: 4px;
 }
 
+.ct-bookmarks-loop {
+	background: #7fffd4;
+	opacity: 0.5;
+}
+
 .ct-hide-bookmark {
 	display: none;
 }
