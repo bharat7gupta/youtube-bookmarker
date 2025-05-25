@@ -196,6 +196,10 @@ hr {
     top: -1px;
 }
 
+.loop-checkbox:disabled {
+  cursor: not-allowed;
+}
+
 .loop-bookmarks {
     text-align: right;
     width: 100%;

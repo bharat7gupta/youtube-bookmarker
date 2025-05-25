@@ -167,6 +167,8 @@ export default function CurrentBookmarks() {
         );
     }
 
+    const isLoopDisabled = selectedBookmarks.length < 2;
+
     return (
         <>
             <div class="current-bookmarks">
@@ -211,13 +213,13 @@ export default function CurrentBookmarks() {
             {bookmarks.length >= 2 && (
                 <div class="row">
                     <div class="loop-bookmarks">
-                        <label class="loop-toggle">
-                            <span>Loop between selected bookmarks</span>
+                        <label class="loop-toggle" title={isLoopDisabled ? 'select any two bookmarks' : null}>
+                            <span>Loop between two bookmarks</span>
                             <input
                                 type="checkbox"
                                 class="loop-checkbox"
                                 checked={isLooping}
-                                disabled={selectedBookmarks.length < 2}
+                                disabled={isLoopDisabled}
                                 onChange={() => setIsLooping(!isLooping)}
                             />
                         </label>
