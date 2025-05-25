@@ -20,6 +20,20 @@ export default function ExportBookmarks() {
     navigator.clipboard.writeText(exportData);
   };
 
+  const exportToFile = () => {
+    const fileName = 'youtube-bookmarker-export.txt';
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportData));
+    element.setAttribute('download', fileName);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  };
+
   return (
     <div className="import-export-container">
       <div className="modal-content">
@@ -38,6 +52,13 @@ export default function ExportBookmarks() {
             disabled={!exportData}
           >
             Copy to Clipboard
+          </button>
+
+          <button 
+            onClick={exportToFile}
+            disabled={!exportData}
+          >
+            Export to file
           </button>
         </div>
       </div>
