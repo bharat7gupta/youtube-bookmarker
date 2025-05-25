@@ -50,6 +50,7 @@ export default function ExportBookmarks() {
           <button 
             onClick={copyToClipboard}
             disabled={!exportData}
+            className="secondary-button"
           >
             Copy to Clipboard
           </button>
