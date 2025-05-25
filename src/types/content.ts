@@ -10,4 +10,10 @@ export interface ContentReducerState {
   lastModifiedByVideoId: Record<string, number>
 }
 
-export type VideoInitData = Pick<ContentReducerState, 'bookmarks' | 'lastModifiedByVideoId' | 'videoDuration'>;
+export type VideoInitData = Pick<
+  ContentReducerState, 
+  'bookmarks' | 
+  'lastModifiedByVideoId' | 
+  'videoDuration' | 
+  'loopData'
+>;

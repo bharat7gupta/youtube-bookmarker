@@ -18,12 +18,13 @@ function contentReducer(state: ContentReducerState, action) {
       return { ...initialState, videoId };
     }
     case 'VIDEO_DATA_INIT': {
-      const { bookmarks, lastModifiedByVideoId, videoDuration } = action.videoData as VideoInitData;
+      const { bookmarks, lastModifiedByVideoId, videoDuration, loopData } = action.videoData as VideoInitData;
       return {
         ...state,
         bookmarks,
         lastModifiedByVideoId,
-        videoDuration
+        videoDuration,
+        loopData
       };
     }
     case 'AD_PLAY_STATUS': {

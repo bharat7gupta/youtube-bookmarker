@@ -20,6 +20,10 @@ function YouTubeIntegration() {
 
   const onVideoDataInit = (videoData: VideoInitData) => {
     dispatch({ type: 'VIDEO_DATA_INIT', videoData });
+
+    if (videoData.loopData?.isLooping) {
+      contentAppRef.current.seekTo(videoData.loopData.startTime);
+    }
   };
 
   const onAdPlayStatusChange = (isPlayingAd: boolean) => {

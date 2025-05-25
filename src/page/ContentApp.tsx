@@ -68,18 +68,16 @@ const ContentApp = forwardRef<ContentAppRef, ContentAppProps>(({
     });
   }, []);
   
-  const initLoopSectionIfAny = useCallback((videoId: string) => {
-    chrome.storage.sync.get(['loopData'], function(data) {
-      if (!data['loopData']) return;
-      
-      const savedLoopData = JSON.parse(data['loopData']) ?? {};
-      const videoLoopData = savedLoopData[videoId];
-      
-      if (videoLoopData?.isLooping) {
-        if (ytPlayerRef.current) {
-          ytPlayerRef.current.currentTime = videoLoopData.startTime;
-        }
-      }
+  const fetchLoopData = useCallback(async (videoId: string): Promise<LoopData> => {
+    return new Promise(resolve => {
+      chrome.storage.sync.get(['loopData'], function(data) {
+        if (!data['loopData']) return;
+        
+        const savedLoopData = JSON.parse(data['loopData']) ?? {};
+        const videoLoopData = savedLoopData[videoId];
+        
+        resolve(videoLoopData);
+      });
     });
   }, []);
 
@@ -126,10 +124,10 @@ const ContentApp = forwardRef<ContentAppRef, ContentAppProps>(({
     Promise.all([
       fetchBookmarks(videoId),
       fetchLastModifiedData(),
-      getVideoDurationPromise()
-    ]).then(([bookmarks, lastModifiedByVideoId, videoDuration]) => {
-      onVideoDataInit({ bookmarks, lastModifiedByVideoId, videoDuration });
-      initLoopSectionIfAny(videoId);
+      getVideoDurationPromise(),
+      fetchLoopData(videoId)
+    ]).then(([bookmarks, lastModifiedByVideoId, videoDuration, loopData]) => {
+      onVideoDataInit({ bookmarks, lastModifiedByVideoId, videoDuration, loopData });
     });
 
     if (ytPlayerRef.current) {
@@ -161,7 +159,7 @@ const ContentApp = forwardRef<ContentAppRef, ContentAppProps>(({
         clearInterval(adCheckIntervalRef.current);
       }
     };
-  }, [videoId, fetchBookmarks, fetchLastModifiedData, getVideoDurationPromise, initLoopSectionIfAny]);
+  }, [videoId, fetchBookmarks, fetchLastModifiedData, getVideoDurationPromise, fetchLoopData]);
   
   useEffect(() => {
     if (!loopData?.isLooping || !ytPlayerRef.current) return;
@@ -182,15 +180,17 @@ const ContentApp = forwardRef<ContentAppRef, ContentAppProps>(({
     };
   }, [loopData]);
 
+  const seekTo = (time: number) => {
+    if (ytPlayerRef.current) {
+      ytPlayerRef.current.currentTime = time;
+    }
+  };
+
   // Expose methods via ref
   useEffect(() => {
     if (ref) {
       (ref as any).current = {
-        seekTo: (time: number) => {
-          if (ytPlayerRef.current) {
-            ytPlayerRef.current.currentTime = time;
-          }
-        },
+        seekTo,
       };
     }
   }, [ref]);
