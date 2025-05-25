@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import { Bookmark } from '../types/bookmark';
 import { useRef } from 'preact/hooks';
 import Reactions from '../common/Reactions/Reactions';
@@ -10,7 +9,7 @@ interface BookmarkItemProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onDescriptionChange: (time: number, newDesc: string) => void;
-  onBookmarkReaction: (bookmar: Bookmark, reaction: string) => void;
+  onBookmarkReaction: (bookmarTime: number, reaction: string) => void;
 }
 
 export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter, onMouseLeave, onDescriptionChange, onBookmarkReaction }: BookmarkItemProps) {
@@ -67,7 +66,7 @@ export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter,
   };
 
   const handleReaction = (reaction: string) => {
-    onBookmarkReaction(bookmark, reaction);
+    onBookmarkReaction(bookmark.time, reaction);
   };
 
   return (

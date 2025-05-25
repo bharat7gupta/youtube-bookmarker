@@ -127,6 +127,23 @@ function YouTubeIntegration() {
     chrome.storage.sync.set({[state.videoId]: JSON.stringify(updatedBookmarks)});
   };
 
+  const handleBookmarkReactionChange = (bookmarkTime: number, reaction: string) => {
+    const updatedBookmarks = state.bookmarks.map((bookmark: Bookmark) => {
+      if (bookmark.time !== bookmarkTime) return bookmark;
+
+      const newReaction = bookmark.reaction === reaction ? undefined : reaction;
+      return { ...bookmark, reaction: newReaction };
+    });
+
+    chrome.storage.sync.set({[state.videoId]: JSON.stringify(updatedBookmarks)});
+
+    dispatch({
+      type: 'ADD_REACTION',
+      bookmarkTime: bookmarkTime,
+      reaction
+    });
+  };
+
   const renderBookmarkButtonPortal = (): VNode | null => {
     if (!bookmarkButtonContainer || !contentAppRef.current) return null;
 
@@ -166,9 +183,7 @@ function YouTubeIntegration() {
               setYTTooltipVisibility('visible');
             },
             onDescriptionChange: handleBookmarkDescChange,
-            onBookmarkReaction: () => {
-              // TODO
-            },
+            onBookmarkReaction: handleBookmarkReactionChange,
           })
         ),
         state.loopData?.isLooping && 

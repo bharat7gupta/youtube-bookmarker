@@ -134,11 +134,11 @@ export default function CurrentBookmarks() {
     };
 
     const onBookmarkReaction = (bookmark: Bookmark, reaction: string) => {
-        const updatedBookmarks = bookmarks.map((b) => {
-            if (b.time !== bookmark.time) return b;
+        const updatedBookmarks = bookmarks.map((bookmark) => {
+            if (bookmark.time !== bookmark.time) return bookmark;
 
-            const newReaction = b.reaction === reaction ? undefined : reaction;
-            return { ...b, reaction: newReaction };
+            const newReaction = bookmark.reaction === reaction ? undefined : reaction;
+            return { ...bookmark, reaction: newReaction };
         });
 
         setBookmarks(updatedBookmarks);
