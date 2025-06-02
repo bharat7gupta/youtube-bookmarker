@@ -34,16 +34,12 @@
 
 .ct-bookmark-tooltip {
 	position: absolute;
-	bottom: -12px;
-	left: 50%;
-	transform: translateX(-50%);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 12px;
+	bottom: -12px;
 	background: white;
 	color: #0F0F0F;
-	padding: 12px;
 	border-radius: 4px;
 	font-size: 18px;
 	white-space: nowrap;
@@ -69,10 +65,14 @@
 	display: inline-block;
 	min-width: 120px;
 	flex-shrink: 0;
+	padding: 12px;
 	cursor: text;
 	outline: none;
+	max-width: 200px;
+	overflow: auto;
 }
 
 .ct-bookmark-tooltip .ct-reactions-container {
+	padding: 12px;
 	margin-top: 8px;
 }

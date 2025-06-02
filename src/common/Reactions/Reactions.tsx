@@ -17,9 +17,10 @@ const ALL_REACTIONS = [
 interface ReactionsProps {
   bookmark: Bookmark;
   onClick: (reaction: string) => void;
+  reactionsPanelStyle?: any;
 }
 
-export default function Reactions({ bookmark, onClick }: ReactionsProps) {
+export default function Reactions({ bookmark, onClick, reactionsPanelStyle }: ReactionsProps) {
   return (
     <div className="reactions">
       <span className="reactions-button" style={bookmark.reaction ? { marginTop: '-7px' } : null}>
@@ -28,7 +29,7 @@ export default function Reactions({ bookmark, onClick }: ReactionsProps) {
           : <HappyIcon />}
       </span>
 
-      <div className="reactions-panel">
+      <div className="reactions-panel" style={reactionsPanelStyle}>
         {ALL_REACTIONS.map(reaction => (
           <span
             className="reaction-emoji"

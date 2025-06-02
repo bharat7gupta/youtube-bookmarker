@@ -1,5 +1,5 @@
 import { Bookmark } from '../types/bookmark';
-import { useRef } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import Reactions from '../common/Reactions/Reactions';
 
 interface BookmarkItemProps {
@@ -13,11 +13,15 @@ interface BookmarkItemProps {
 }
 
 export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter, onMouseLeave, onDescriptionChange, onBookmarkReaction }: BookmarkItemProps) {
+  const [tooltipStyle, setTooltipStyle] = useState({});
+  const [reactionsPanelStyle, setReactionsPanelStyle] = useState({});
+
   const position = ((bookmark.time / duration) * 100);
   const className = `ct-bookmark${hidden ? ' ct-hide-bookmark' : ''}`;
   const id = `ct-bookmark-${bookmark.time}`;
 
   const bookmarkDescRef = useRef(null);
+  const bookmarkItemRef = useRef(null);
 
   const stopEventPropagation = (event: MouseEvent) => {
     event.stopPropagation();
@@ -27,6 +31,40 @@ export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter,
   const preventEventPropagation = (event: MouseEvent) => {
     event.preventDefault();
     stopEventPropagation(event);
+  };
+
+  const handleMouseEnter = () => {
+    onMouseEnter();
+    updateTooltipPosition();
+  };
+
+  const updateTooltipPosition = () => {
+    if (!bookmarkItemRef.current) return;
+    
+    const bookmarkItem = bookmarkItemRef.current;
+    const leftPos = bookmarkItem.offsetLeft;
+    
+    let newTooltipStyle: any = {};
+    let newReactionsPanelStyle: any = {};
+
+    if (leftPos < 150) {
+      newReactionsPanelStyle.right = '-90px';
+    }
+
+    if (leftPos < 120) {
+      newTooltipStyle.left = '0';
+      newTooltipStyle.transform = 'translateX(0) scaleY(0.5)';
+    }
+    else if (leftPos > window.innerWidth - 120) {
+      newTooltipStyle.right = '0';
+      newTooltipStyle.transform = 'translateX(0) scaleY(0.5)';
+    } else {
+      newTooltipStyle.left = '50%';
+      newTooltipStyle.transform = 'translateX(-50%) scaleY(0.5)';
+    }
+    
+    setTooltipStyle(newTooltipStyle);
+    setReactionsPanelStyle(newReactionsPanelStyle);
   };
 
   const handleTooltipMouseDown = (event: MouseEvent) => {
@@ -71,10 +109,11 @@ export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter,
 
   return (
     <div
+      ref={bookmarkItemRef}
       id={id}
       className={className} 
       style={{ left: `calc(${position}% - 2px)` }}
-      onMouseEnter={onMouseEnter}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       {bookmark.reaction && (
@@ -83,6 +122,7 @@ export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter,
 
       <div 
         className="ct-bookmark-tooltip"
+        style={tooltipStyle}
         onBlur={handleTooltipBlur}
         onMouseMove={preventEventPropagation}
         onMouseDown={handleTooltipMouseDown}
@@ -97,8 +137,8 @@ export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter,
           {bookmark.desc}
         </div>
 
-        <div className="ct-reactions-container">
-          <Reactions bookmark={bookmark} onClick={handleReaction} />
+        <div className="ct-reactions-container" style={reactionsPanelStyle}>
+          <Reactions bookmark={bookmark} onClick={handleReaction} reactionsPanelStyle={reactionsPanelStyle} />
         </div>
       </div>
     </div>
