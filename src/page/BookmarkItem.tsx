@@ -51,11 +51,14 @@ export default function BookmarkItem({ bookmark, duration, hidden, onMouseEnter,
       newReactionsPanelStyle.right = '-90px';
     }
 
+    const ytPlayer = document.getElementsByClassName("html5-main-video")[0] as HTMLVideoElement;
+    const ytPlayerWidth = ytPlayer.offsetWidth;
+
     if (leftPos < 120) {
       newTooltipStyle.left = '0';
       newTooltipStyle.transform = 'translateX(0) scaleY(0.5)';
     }
-    else if (leftPos > window.innerWidth - 120) {
+    else if (leftPos > ytPlayerWidth - 120) {
       newTooltipStyle.right = '0';
       newTooltipStyle.transform = 'translateX(0) scaleY(0.5)';
     } else {
