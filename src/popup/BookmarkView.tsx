@@ -52,7 +52,6 @@ export default function BookmarkView({ videoId, bookmark, selectionDisabled, sel
         <div key={bookmark.time} class="bookmark">
             <input
                 type="checkbox"
-                class="loop-between-bookmarks-checkbox"
                 disabled={selectionDisabled}
                 onInput={(e) => onSelect(bookmark, (e.target as HTMLInputElement).checked)}
                 checked={selected}

@@ -49,6 +49,8 @@
 
 .bookmark {
 	display: flex;
+  justify-content: center;
+  align-items: center;
 	border-bottom: 1px solid #e5e5e5;
 	padding: 8px 0;
 }
@@ -87,14 +89,15 @@
 	width: 56px;
 }
 
-.bookmark-controls .action,
-.bookmark-min-controls .action {
+.bookmark-controls .action {
 	margin: 0 2px;
 	cursor: pointer;
+  margin-top: 4px;
 }
 
-.loop-between-bookmarks-checkbox {
-	margin-top: -2px;
+.bookmark-min-controls .action {
+  margin: 0 2px;
+	cursor: pointer;
 }
 
 .inline-checkbox {
